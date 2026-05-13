@@ -1,0 +1,18 @@
+{
+    "mcpServers": {
+        "sql-proyecto-actual": {
+            "command": "python",
+            "args": [
+                "-m",
+                "mssql_mcp_server"
+            ],
+            "env": {
+                "MSSQL_SERVER": "localhost\\SQLEXPRESS2022",
+                "MSSQL_DATABASE": "SOLUDENT_20",
+                "MSSQL_USER": "sa",
+                "MSSQL_PASSWORD": "clasified",
+                "MSSQL_TRUST_SERVER_CERTIFICATE": "true"
+            }
+        }
+    }
+}

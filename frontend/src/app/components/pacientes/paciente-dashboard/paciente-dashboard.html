@@ -1,0 +1,57 @@
+<header class="top-bar">
+  <div class="search-container">
+    <!-- Search is generally left empty or specific to the module here if needed -->
+  </div>
+  <div class="top-actions">
+    <button class="icon-btn">🔔</button>
+    <button class="icon-btn">🕒</button>
+  </div>
+</header>
+
+<div class="content-area">
+  <div class="breadcrumb">
+    <span>PACIENTES</span> / <span class="current">EXPEDIENTE</span>
+  </div>
+
+<div class="patient-header">
+    <div class="patient-info">
+      <div class="avatar">
+        <span>{{ pacienteNombre().charAt(0) }}</span>
+      </div>
+      <div>
+        <h1>
+          {{ pacienteNombre() }}
+          <span *ngIf="!pacienteActivo()" class="inactive-badge">ELIMINADO</span>
+        </h1>
+        <div class="patient-meta">
+          <span class="id">V-{{ pacienteId }} ({{ representado }})</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="header-actions">
+      <button class="btn-secondary" routerLink="/pacientes">
+        VOLVER AL LISTADO
+      </button>
+    </div>
+  </div>
+
+  <div *ngIf="!pacienteActivo()" class="readonly-banner">
+    ⛔ Este paciente está eliminado. Solo puede ver sus datos. Para editarlos o asignar citas, reactívelo primero desde el Directorio de Pacientes.
+  </div>
+
+  <div class="tabs-container">
+    <nav class="patient-tabs">
+      <a *ngFor="let tab of tabs()" 
+         [routerLink]="['/pacientes', pacienteId, representado, tab.path]"
+         routerLinkActive="active" 
+         class="tab-item">
+        <span class="icon">{{ tab.icon }}</span> {{ tab.label }}
+      </a>
+    </nav>
+  </div>
+
+  <div class="tab-content">
+    <router-outlet></router-outlet>
+  </div>
+</div>

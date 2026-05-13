@@ -1,0 +1,184 @@
+// Variables del Design System "The Clinical Sanctuary"
+$primary: #001e40;
+$secondary: #2d6484;
+$surface-container-lowest: #ffffff;
+$surface-container-low: #f2f4f6;
+$surface-container-high: #e6e8ea;
+$on-surface: #191c1e;
+$on-surface-variant: #43474f;
+$error: #ba1a1a;
+$font-display: 'Manrope', sans-serif;
+$font-body: 'Inter', sans-serif;
+
+.login-wrapper {
+  display: flex;
+  min-height: 100vh;
+  width: 100%;
+  font-family: $font-body;
+  background-color: $surface-container-low;
+}
+
+.brand-section {
+  flex: 1;
+  background: linear-gradient(135deg, #001e40 0%, #2d6484 100%);
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  padding: 4rem;
+  
+  @media (min-width: 768px) {
+    display: flex;
+  }
+
+  .brand-content {
+    text-align: center;
+    max-width: 400px;
+
+    .brand-title {
+      font-family: $font-display;
+      font-size: 3rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+    }
+
+    .brand-subtitle {
+      font-size: 1.125rem;
+      opacity: 0.8;
+    }
+  }
+}
+
+.login-section {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+
+  .login-card {
+    background: $surface-container-lowest;
+    padding: 4rem 3rem;
+    border-radius: 16px;
+    width: 100%;
+    max-width: 480px;
+    // Ambient Depth shadow
+    box-shadow: 0px 20px 40px rgba(0, 30, 64, 0.06);
+
+    .title {
+      font-family: $font-display;
+      color: $on-surface;
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    .subtitle {
+      color: $on-surface-variant;
+      margin-bottom: 3rem;
+      font-size: 1rem;
+    }
+
+    .login-form {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+
+      .input-group {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+
+        label {
+          font-size: 0.875rem;
+          font-weight: 500;
+          color: $on-surface-variant;
+          text-transform: uppercase;
+          letter-spacing: 0.05em; // Editorial detail
+        }
+
+        .soft-input {
+          background-color: $surface-container-high;
+          border: none;
+          border-bottom: 2px solid transparent;
+          padding: 1rem;
+          font-family: $font-body;
+          font-size: 1rem;
+          border-radius: 8px 8px 0 0;
+          color: $on-surface;
+          transition: all 0.2s ease-out;
+
+          &:focus {
+            outline: none;
+            border-bottom-color: $primary;
+            background-color: darken($surface-container-high, 2%);
+          }
+
+          &.invalid {
+            border-bottom-color: $error;
+          }
+        }
+      }
+
+      .error-message {
+        color: $error;
+        font-size: 0.875rem;
+        padding: 0.5rem;
+        background-color: #ffdad6;
+        border-radius: 4px;
+      }
+
+      .success-message {
+        color: #005f39; // Dark green
+        font-size: 0.875rem;
+        padding: 0.5rem;
+        background-color: #d6ffea; // Light green background
+        border-radius: 4px;
+      }
+
+      .btn-primary {
+        margin-top: 1rem;
+        background: linear-gradient(45deg, #003366, #004766);
+        color: white;
+        border: none;
+        padding: 1rem;
+        border-radius: 0.5rem; // ROUND_FOUR
+        font-family: $font-body;
+        font-weight: 600;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
+
+        &:hover:not(:disabled) {
+          transform: translateY(-2px);
+          box-shadow: 0px 8px 16px rgba(0, 51, 102, 0.2);
+        }
+
+        &:disabled {
+          opacity: 0.7;
+          cursor: not-allowed;
+        }
+      }
+
+      .links {
+        text-align: center;
+        margin-top: 1rem;
+
+        a {
+          color: $primary;
+          text-decoration: none;
+          font-size: 0.875rem;
+          font-weight: 500;
+          transition: opacity 0.2s;
+
+          &:hover {
+            opacity: 0.8;
+            text-decoration: underline;
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,118 @@
+<div class="agenda-container">
+  <div class="mb-4 flex justify-between items-center">
+    <h2 class="text-2xl font-bold text-gray-800">Agenda Global</h2>
+    <button (click)="openNuevaCitaModal()" class="btn-primary">
+      + Nueva Cita
+    </button>
+  </div>
+
+  <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+    <full-calendar #calendar [options]="calendarOptions"></full-calendar>
+  </div>
+</div>
+
+<!-- Modal para Crear/Editar Cita -->
+<div *ngIf="showModal" class="modal-overlay" style="z-index: 1000;">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3>{{ modalMode === 'CREATE' ? 'Nueva Cita' : 'Editar Cita' }}</h3>
+      <button (click)="closeModal()" class="close-btn">&times;</button>
+    </div>
+    
+    <div class="modal-body">
+      
+      <!-- Selector de Paciente -->
+      <div class="form-group">
+        <label>Paciente</label>
+        <select [(ngModel)]="citaForm.paciente_str">
+          <option value="">-- Seleccione un Paciente --</option>
+          <option *ngFor="let p of pacientes" [value]="p.Cedula + '|' + p.Representado">
+            {{ p.Nombre }} ({{ p.Cedula }})
+          </option>
+        </select>
+      </div>
+
+      <!-- Fecha -->
+      <div class="form-group">
+        <label>Fecha</label>
+        <input type="date" [(ngModel)]="citaForm.fecha">
+      </div>
+
+      <!-- Hora Inicio y Hora Fin -->
+      <div class="form-row">
+        <div class="form-group">
+          <label>Hora Inicio</label>
+          <input type="time" [(ngModel)]="citaForm.hora" step="1800">
+        </div>
+        <div class="form-group">
+          <label>Hora Fin</label>
+          <input type="time" [(ngModel)]="citaForm.horaFin" step="1800">
+        </div>
+      </div>
+
+      <!-- Silla y Confirmación -->
+      <div class="form-row">
+        <div class="form-group">
+          <label>Silla</label>
+          <select [(ngModel)]="citaForm.silla">
+            <option *ngFor="let silla of sillaOptions" [value]="silla">Silla {{ silla }}</option>
+          </select>
+        </div>
+        <div class="form-group" style="justify-content: flex-end;">
+          <label class="checkbox-group">
+            <input type="checkbox" [(ngModel)]="citaForm.confirmada">
+            <span>Confirmada</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Motivo -->
+      <div class="form-group">
+        <label>Motivo / Tratamiento</label>
+        <textarea [(ngModel)]="citaForm.motivo" rows="3" placeholder="Ej: Limpieza dental"></textarea>
+      </div>
+      
+    </div>
+
+    <div class="modal-footer">
+      <div>
+        <button *ngIf="modalMode === 'EDIT'" (click)="deleteCita()" class="btn-danger">Eliminar Cita</button>
+      </div>
+      <div style="display: flex; gap: 1rem;">
+        <button (click)="closeModal()" class="btn-secondary">Cancelar</button>
+        <button (click)="saveCita()" class="btn-primary">Guardar Cita</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de Confirmación de Eliminación -->
+<div *ngIf="showDeleteConfirm" class="modal-overlay" style="z-index: 1200;">
+  <div class="confirm-modal">
+    <h3 class="confirm-title">Confirmar Eliminación</h3>
+    <p class="confirm-text">
+      ¿Está seguro de que desea eliminar la cita del paciente
+      <strong>{{ deleteConfirmData.nombre }}</strong>
+      programada para el <strong>{{ formatFecha(deleteConfirmData.fecha) }}</strong> a las <strong>{{ formatHora12(deleteConfirmData.hora) }}</strong>?
+    </p>
+    <p class="confirm-warning">Esta acción no se puede deshacer.</p>
+    <div class="confirm-actions">
+      <button (click)="cancelDelete()" class="btn-secondary">No</button>
+      <button (click)="confirmDelete()" class="btn-danger">Sí</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de Confirmación de Mover Cita -->
+<div *ngIf="showMoveConfirm" class="modal-overlay" style="z-index: 1100;">
+  <div class="confirm-modal">
+    <h3 class="confirm-title">Confirmar Movimiento</h3>
+    <p class="confirm-text">
+      ¿Desea mover esta cita al <strong>{{ formatFecha(moveConfirmData.fecha) }}</strong> a las <strong>{{ formatHora12(moveConfirmData.hora) }}</strong>?
+    </p>
+    <div class="confirm-actions">
+      <button (click)="cancelMove()" class="btn-secondary">No</button>
+      <button (click)="confirmMove()" class="btn-primary">Sí</button>
+    </div>
+  </div>
+</div>

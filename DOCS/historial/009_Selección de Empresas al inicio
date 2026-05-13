@@ -1,0 +1,37 @@
+
+## Cambios realizados
+
+### Backend
+- dependencies.py
+  - Añadido `get_cod_cia` que lee `X-CodCia` desde el header y lanza `400` si falta.
+- empresas.py
+  - Nuevo endpoint `GET /api/empresas` que ejecuta `pGetEmpresas`.
+  - Normaliza el resultado para devolver datos consistentes de empresa.
+- pacientes.py
+  - Corregido `update_paciente` para incluir `cod_cia` en el `EXEC SP_Edicion_Pacientes`.
+  - `get_pacientes`, `get_paciente`, `create_paciente`, `update_paciente`, `delete_paciente` ya usan el header dinámico `X-CodCia`.
+
+### Frontend
+- company-selection.ts
+  - Creado componente de selección de empresa antes del login.
+  - Almacena `selectedCompany` en `localStorage`.
+- company-selection.html
+  - Interfaz de empresa con lista de radio buttons y botón de continuar.
+- company-selection.scss
+  - Estilos básicos para la pantalla de selección de empresa.
+- app.routes.ts
+  - Cambiado redirect inicial a `select-company`.
+  - Añadida ruta `select-company`.
+- login.ts
+  - Redirige a `select-company` si no hay empresa seleccionada.
+- auth.interceptor.ts
+  - Agrega `X-CodCia` a todas las peticiones HTTP cuando hay empresa seleccionada.
+- auth.guard.ts
+  - Valida que exista token y empresa seleccionada antes de permitir rutas protegidas.
+
+### Validación
+- Revisado con `get_errors` en los archivos modificados: sin errores detectados.
+
+> El flujo ahora soporta selección de empresa antes de login y usa el código de empresa seleccionado en los llamados al backend.
+
+Made changes.

@@ -1,0 +1,38 @@
+<div class="dashboard-layout">
+  <aside class="sidebar">
+    <div class="brand">
+      <h2>CLINICAL SANCTUARY</h2>
+      <span class="version">Dental Suite v1.0</span>
+    </div>
+    <nav class="nav-menu">
+      <a routerLink="/dashboard" routerLinkActive="active" class="nav-item">
+        <span class="icon">⊞</span> TABLERO
+      </a>
+      <!-- Placeholder route for Agenda -->
+      <a routerLink="/agenda" routerLinkActive="active" class="nav-item">
+        <span class="icon">📅</span> AGENDA
+      </a>
+      <a routerLink="/pacientes" routerLinkActive="active" class="nav-item" [routerLinkActiveOptions]="{exact: false}">
+        <span class="icon">👥</span> PACIENTES
+      </a>
+      <a routerLink="/finanzas" routerLinkActive="active" class="nav-item">
+        <span class="icon">💰</span> FINANZAS
+      </a>
+      <a routerLink="/configuracion" routerLinkActive="active" class="nav-item">
+        <span class="icon">⚙</span> CONFIGURACIÓN
+      </a>
+    </nav>
+    <div class="sidebar-footer">
+      <a href="#" class="nav-item">
+        <span class="icon">❓</span> SOPORTE
+      </a>
+      <button class="logout-btn" (click)="logout()">
+        <span class="icon">🚪</span> CERRAR SESIÓN
+      </button>
+    </div>
+  </aside>
+  
+  <main class="main-content">
+    <router-outlet></router-outlet>
+  </main>
+</div>

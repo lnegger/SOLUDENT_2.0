@@ -1,0 +1,62 @@
+<div class="login-wrapper">
+  <!-- Left Side: Brand & Vibe -->
+  <div class="brand-section">
+    <div class="brand-content">
+      <h1 class="brand-title">SoluDent 2.0</h1>
+      <p class="brand-subtitle">Excelencia y precisión clínica</p>
+    </div>
+  </div>
+
+  <!-- Right Side: Login Form -->
+  <div class="login-section">
+    <div class="login-card">
+      <h2 class="title">Bienvenido al Sanctuary</h2>
+      <p class="subtitle">Ingrese sus credenciales clínicas.</p>
+
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
+        
+        <div class="input-group">
+          <label for="username">Código de Usuario</label>
+          <input 
+            type="text" 
+            id="username" 
+            formControlName="username" 
+            placeholder="Ej: ADMIN"
+            class="soft-input"
+            [class.invalid]="loginForm.get('username')?.invalid && loginForm.get('username')?.touched">
+        </div>
+
+        <div class="input-group">
+          <label for="password">Clave de Acceso</label>
+          <input 
+            type="password" 
+            id="password" 
+            formControlName="password" 
+            placeholder="••••••••"
+            class="soft-input"
+            [class.invalid]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
+        </div>
+
+        @if (errorMessage()) {
+          <div class="error-message">
+            {{ errorMessage() }}
+          </div>
+        }
+
+        @if (successMessage()) {
+          <div class="success-message">
+            {{ successMessage() }}
+          </div>
+        }
+
+        <button type="submit" class="btn-primary" [disabled]="isLoading() || loginForm.invalid">
+          {{ isLoading() ? 'Verificando...' : 'Ingresar al Sistema' }}
+        </button>
+
+        <div class="links">
+          <a href="#">¿Olvidó su clave clínica?</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

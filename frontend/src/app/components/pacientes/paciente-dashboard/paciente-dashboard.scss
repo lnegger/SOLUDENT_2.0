@@ -1,0 +1,144 @@
+$midnight-navy: #001e40;
+$steel-blue: #2d6484;
+$sanctuary-white: #f7f9fb;
+$subtle-slate: #f2f4f6;
+$clarity-white: #ffffff;
+$soft-gray: #e6e8ea;
+$teal-grad-start: #003366;
+$teal-grad-end: #004766;
+
+$font-header: 'Manrope', sans-serif;
+$font-body: 'Inter', sans-serif;
+$radius-four: 0.5rem;
+$ambient-shadow: 0px 20px 40px rgba(0, 30, 64, 0.06);
+
+.patient-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+
+  .patient-info {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+
+    .avatar {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, $teal-grad-start, $teal-grad-end);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 1.5rem;
+      box-shadow: $ambient-shadow;
+    }
+
+    h1 {
+      margin: 0 0 4px 0;
+      font-family: $font-header;
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: $midnight-navy;
+    }
+
+    .patient-meta {
+      font-size: 0.85rem;
+      color: $steel-blue;
+      font-weight: 500;
+    }
+  }
+
+  .btn-secondary {
+    background-color: transparent;
+    border: 1px solid $steel-blue;
+    color: $steel-blue;
+    padding: 10px 20px;
+    border-radius: $radius-four;
+    font-family: $font-header;
+    font-weight: 700;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover {
+      background-color: $subtle-slate;
+    }
+  }
+}
+
+.tabs-container {
+  background-color: $clarity-white;
+  border-radius: $radius-four $radius-four 0 0;
+  border-bottom: 1px solid $soft-gray;
+  padding: 0 24px;
+  
+  .patient-tabs {
+    display: flex;
+    gap: 32px;
+
+    .tab-item {
+      display: inline-flex;
+      align-items: center;
+      padding: 16px 0;
+      color: $steel-blue;
+      text-decoration: none;
+      font-family: $font-header;
+      font-weight: 700;
+      font-size: 0.85rem;
+      border-bottom: 3px solid transparent;
+      transition: all 0.2s ease;
+
+      .icon {
+        margin-right: 8px;
+        font-size: 1.1rem;
+      }
+
+      &:hover {
+        color: $midnight-navy;
+      }
+
+      &.active {
+        color: $midnight-navy;
+        border-bottom-color: $midnight-navy;
+      }
+    }
+  }
+}
+
+.tab-content {
+  background-color: $clarity-white;
+  border-radius: 0 0 $radius-four $radius-four;
+  padding: 24px;
+  box-shadow: $ambient-shadow;
+  min-height: 400px;
+}
+
+.inactive-badge {
+  display: inline-block;
+  background-color: #e53e3e;
+  color: $clarity-white;
+  font-size: 0.6rem;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  vertical-align: middle;
+  margin-left: 12px;
+}
+
+.readonly-banner {
+  background-color: #fefcbf;
+  color: #975a16;
+  padding: 16px;
+  border-radius: $radius-four;
+  margin-bottom: 16px;
+  font-weight: 600;
+  font-family: $font-body;
+  border: 1px solid #f6e05e;
+  font-size: 0.9rem;
+}

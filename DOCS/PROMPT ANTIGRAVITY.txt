@@ -1,0 +1,44 @@
+1.- Necesito crear una aplicación WEB usando:
+	1.1.- Angular como FronEnd
+	1.2.- Python como Backend
+	1.3.- Sql Server como base de datos
+	1.4.- FastApi
+	1.5.- Debe estar integrada a stitch
+2.- Debe ser totalmente modular
+3.- Debe ser orientada a objetos
+4.- Debe usar los conceptos más avanzados de cada aspecto del sistema
+
+Lo primero que quiero hacer es una pantallade login.
+Para esto, necesito que crees: 
+- El script de creación de la base de datos.
+- El script de la creación de la tabla de usuarios
+- Si es necesario, crea otra tabla relacionada a la de los usuarios en los que se guarden los permisos de cada usuario dentro de la aplicaci;ion.
+- Crea todos los módulos que se necesiten basado en la premisas indicadas desde los puntos 1 al 4.
+
+
+
+
+Necesito generar una aplicación web para el control de consultorios odontológico de manera centralizada. 
+El sistema debe contar con las siguientes implementaciones:
+
+1.- Archivo Maestro de pacientes tal como una historia clínica. 
+2.- Registro de los tratamientos que el paciente necesite a través de un odontodiagrama.
+3.- Registro de citas del paciente a través de una agenda propfesional.
+4.- Creación de presupuestos de todos los tratamientos que requiera el paciente que puedan ser enviados por correo, impresos y reimpresos
+5.- Registro de los abonos a cuenta que haga el paciente que puedan ser enviados por correo, impresos y reimpresos con diferentes modalidades de pago (Efectivo, tarjeta,cheques,Zelle, Binance, mixtos)
+6.- Registro de los envíos que se hagan a los Laboratorios dentales para la realización de algúna prótesis para los pacientes. Debe controlares estaus como: 
+	Enviado, recibido, entregado, en revisión y compleatdo. Deben crearse CRUDS para los laboratorios.
+7.- Maestro de gastos del consultorio y la inclusión de los mismos.
+8.- Configuraci{on de nuevos usuarios al sistema y los diferentes accesos que puedan tener los mismos a los diferentes m{odulos del sistema
+9.- El sistema debe guardar un log de todo lo que se hace en el sistema. Un archivo log por día.
+10. Debe mostarse en un dashboard todo lo concerniente a ingreso de dinero del consultorio contra los gastos generados por el mismo.
+11. Deben crearse CRUDS para los pacientes, gastos, laboratorios, usuarios, entidades bancarias.
+
+Los colores del sistema deben ser un azul #003366 con degradez pasando por verde #004766 y finalizando en #004766
+Los menú principal debe aparecer/o desaparecer por la izquierda de la pantalla y debe poder quedarse fijo si así lo desea el usuario.
+Esto es lo que por ahora necesito.
+Luego continuaremos en las mejoras.
+
+
+
+

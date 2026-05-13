@@ -1,0 +1,149 @@
+    <header class="top-bar">
+      <div class="search-container">
+        <span class="search-icon">🔍</span>
+        <input type="text" placeholder="Buscar por nombre o cédula..." class="search-input" (input)="updateSearchTerm($event)">
+      </div>
+      <div class="top-actions">
+        <button class="icon-btn">🔔</button>
+        <button class="icon-btn">🕒</button>
+      </div>
+    </header>
+
+    <div class="content-area">
+      <div class="breadcrumb">
+        <span>PACIENTES</span> / <span class="current">DIRECTORIO</span>
+      </div>
+
+      <div class="header-actions">
+        <h1>Directorio de Pacientes</h1>
+        <button class="btn-primary" routerLink="/pacientes/nuevo">
+          <span class="icon">+</span> NUEVO PACIENTE
+        </button>
+      </div>
+
+      <div class="content-card table-card">
+
+        <div *ngIf="isLoading()" class="loading-state">
+          <p>Cargando pacientes...</p>
+        </div>
+
+        <div *ngIf="errorMessage()" class="error-state">
+          <p>{{ errorMessage() }}</p>
+        </div>
+
+        <table class="clinical-table" *ngIf="!isLoading() && !errorMessage()">
+          <thead>
+            <tr>
+              <th>Paciente</th>
+              <th>Teléfono</th>
+              <th>Correo Electronico</th>
+              <th>Estado</th>
+              <th class="actions-col">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let p of paginatedPacientes()">
+              <td>
+                <div class="user-cell">
+                  <div class="avatar">
+                    <img *ngIf="p.ArchivoFoto" [src]="apiBaseUrl + p.ArchivoFoto" class="avatar-img" alt="Foto de {{ p.Nombre }}">
+                    <span *ngIf="!p.ArchivoFoto">{{ p.Nombre.charAt(0) }}</span>
+                  </div>
+                  <div>
+                    <div class="name">
+                      {{ p.Nombre }}
+                      <span class="badge" [class.badge-primary]="p.Representado === '00' || p.Representado === '0'" [class.badge-secondary]="p.Representado !== '00' && p.Representado !== '0'">
+                        {{ (p.Representado === '00' || p.Representado === '0') ? 'Titular' : 'Dependiente' }}
+                      </span>
+                    </div>
+                    <div class="cedula">V-{{ p.Cedula }} <span *ngIf="p.Representado !== '00' && p.Representado !== '0'">({{ p.Representado }})</span></div>
+                  </div>
+                </div>
+              </td>
+              <td>{{ p.TelefCelular || 'No registrado' }}</td>
+              <td>{{ p.CorreoElectronico || 'No registrado' }}</td>
+              <td>
+                <span class="status-badge" [class.active]="p.Activo === 1">
+                  {{ p.Activo === 1 ? 'Activo' : 'Inactivo' }}
+                </span>
+              </td>
+              <td class="actions-cell">
+                <!-- Paciente ACTIVO: Editar y Eliminar -->
+                <ng-container *ngIf="p.Activo === 1">
+                  <button class="icon-btn edit-btn" [routerLink]="['/pacientes', p.Cedula, p.Representado]" title="Ver/Editar">✏️</button>
+                  <button class="icon-btn delete-btn" (click)="eliminarPaciente(p)" title="Inactivar">🗑️</button>
+                </ng-container>
+                <!-- Paciente INACTIVO: Solo Ver y Reactivar -->
+                <ng-container *ngIf="p.Activo !== 1">
+                  <button class="icon-btn view-btn" [routerLink]="['/pacientes', p.Cedula, p.Representado]" title="Ver datos (solo lectura)">👁️</button>
+                  <button class="icon-btn activate-btn" (click)="activarPaciente(p)" title="Reactivar paciente">✅</button>
+                </ng-container>
+              </td>
+            </tr>
+            <tr *ngIf="paginatedPacientes().length === 0">
+              <td colspan="6" class="empty-state">No se encontraron pacientes en esta página.</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- Paginación -->
+        <div class="pagination-footer" *ngIf="totalPages() > 1">
+          <button class="btn-pagination" [disabled]="currentPage() === 1" (click)="prevPage()">Anterior</button>
+          
+          <div class="page-info">
+            Página {{ currentPage() }} de {{ totalPages() }}
+          </div>
+          
+          <button class="btn-pagination" [disabled]="currentPage() === totalPages()" (click)="nextPage()">Siguiente</button>
+        </div>
+      </div>
+    </div>
+
+
+  <!-- Modal de Confirmación de Eliminación -->
+  <div class="modal-overlay" *ngIf="showModal()" (click)="cancelarEliminar()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <h3>Confirmar Eliminación</h3>
+      <p *ngIf="pacienteToDelete()">¿Está seguro de que desea eliminar al paciente <strong>{{ pacienteToDelete()?.Nombre }}</strong> (V-{{ pacienteToDelete()?.Cedula }})?</p>
+      <p>Esta acción no se puede deshacer.</p>
+      <div class="modal-actions">
+        <button class="btn-secondary" (click)="cancelarEliminar()">No</button>
+        <button class="btn-danger" (click)="confirmarEliminar()">Sí</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de Confirmación de Reactivación -->
+  <div class="modal-overlay" *ngIf="showActivateModal()" (click)="cancelarActivar()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <h3>Reactivar Paciente</h3>
+      <p *ngIf="pacienteToActivate()">¿Desea reactivar al paciente <strong>{{ pacienteToActivate()?.Nombre }}</strong> (V-{{ pacienteToActivate()?.Cedula }})?</p>
+      <p>El paciente volverá a estar activo en el sistema.</p>
+      <div class="modal-actions">
+        <button class="btn-secondary" (click)="cancelarActivar()">Cancelar</button>
+        <button class="btn-activate" (click)="confirmarActivar()">Reactivar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast de Éxito -->
+  <div class="success-toast" *ngIf="showSuccessToast()" (click)="dismissSuccessToast()">
+    <div class="toast-icon">✅</div>
+    <div class="toast-body">
+      <div class="toast-title">Paciente Reactivado</div>
+      <div class="toast-message">{{ successMessage() }}</div>
+    </div>
+    <button class="toast-close" (click)="dismissSuccessToast()">✕</button>
+  </div>
+
+  <!-- Modal de Error -->
+  <div class="modal-overlay" *ngIf="showErrorModal()" (click)="dismissErrorModal()">
+    <div class="modal-content error-modal" (click)="$event.stopPropagation()">
+      <div class="error-icon">⚠️</div>
+      <h3>Error al Reactivar</h3>
+      <p>{{ errorModalMessage() }}</p>
+      <div class="modal-actions">
+        <button class="btn-primary" (click)="dismissErrorModal()">Entendido</button>
+      </div>
+    </div>
+  </div>

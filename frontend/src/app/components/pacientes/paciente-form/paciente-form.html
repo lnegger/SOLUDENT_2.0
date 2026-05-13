@@ -1,0 +1,192 @@
+    <header class="top-bar" *ngIf="!isEditing()">
+      <div class="search-container">
+        <!-- Barra de búsqueda genérica, inactiva en form -->
+      </div>
+      <div class="top-actions">
+        <button class="icon-btn">🔔</button>
+        <button class="icon-btn">🕒</button>
+      </div>
+    </header>
+
+    <div [class.content-area]="!isEditing()">
+      <div class="breadcrumb" *ngIf="!isEditing()">
+        <span>PACIENTES</span> / <span class="current">NUEVO</span>
+      </div>
+
+      <div class="header-actions" *ngIf="!isEditing()">
+        <h1>Registrar Nuevo Paciente</h1>
+        <button class="btn-secondary" routerLink="/pacientes">
+          VOLVER AL LISTADO
+        </button>
+      </div>
+
+      <div *ngIf="errorMessage()" class="error-banner">
+        {{ errorMessage() }}
+      </div>
+
+      <div *ngIf="isReadOnly()" class="readonly-banner">
+        ⛔ Este paciente está eliminado. Solo puede ver sus datos. Para editar, reactívelo primero desde el Directorio de Pacientes.
+      </div>
+
+      <div class="content-card form-card">
+        <form [formGroup]="pacienteForm" (ngSubmit)="onSubmit()" class="clinical-form">
+          
+          <div class="form-section">
+            <h3 class="section-title">Información Personal</h3>
+            
+            <div class="photo-upload-section">
+              <div class="photo-preview">
+                <img *ngIf="fotoPreview" [src]="fotoPreview" alt="Vista previa de foto" class="carnet-img">
+                <div *ngIf="!fotoPreview" class="photo-placeholder">
+                  <span class="icon">👤</span>
+                  <span>Sin Foto</span>
+                </div>
+              </div>
+              <div class="photo-actions" *ngIf="!isReadOnly()">
+                <label for="fotoInput" class="btn-secondary photo-btn">
+                  {{ isUploading() ? 'SUBIENDO...' : 'SELECCIONAR FOTO' }}
+                </label>
+                <input type="file" id="fotoInput" accept="image/*" (change)="onFileSelected($event)" style="display: none;" [disabled]="isUploading()">
+                <p class="help-text">Formato carnet (JPG, PNG). Máx 2MB.</p>
+              </div>
+            </div>
+            
+            <div class="form-grid">
+
+              <div class="form-group full-width" style="margin-bottom: 1rem;">
+                <label>Tipo de Registro</label>
+                <div style="display: flex; gap: 2rem; margin-top: 0.5rem;">
+                  <label style="display: flex; align-items: center; gap: 0.5rem; font-weight: 500;">
+                    <input type="radio" formControlName="es_dependiente" [value]="false" (change)="checkTitular()"> Titular Principal
+                  </label>
+                  <label style="display: flex; align-items: center; gap: 0.5rem; font-weight: 500;">
+                    <input type="radio" formControlName="es_dependiente" [value]="true" (change)="checkTitular()"> Dependiente (Menor/Familiar)
+                  </label>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="Cedula">
+                  {{ pacienteForm.get('es_dependiente')?.value ? 'Cédula del Representante *' : 'Cédula de Identidad *' }}
+                </label>
+                <input type="text" id="Cedula" formControlName="Cedula" placeholder="Ej: V12345678" (blur)="checkTitular()" [class.error]="pacienteForm.get('Cedula')?.invalid && pacienteForm.get('Cedula')?.touched">
+                <span class="error-msg" *ngIf="pacienteForm.get('Cedula')?.invalid && pacienteForm.get('Cedula')?.touched && !pacienteForm.get('Cedula')?.hasError('titularNoExiste')">Cédula inválida o vacía.</span>
+                <span class="error-msg" *ngIf="pacienteForm.get('Cedula')?.hasError('titularNoExiste')">El titular no existe. No se puede registrar.</span>
+              </div>
+              
+              <div class="form-group">
+                <label for="Nombre">Nombre Completo *</label>
+                <input type="text" id="Nombre" formControlName="Nombre" placeholder="Nombre del paciente">
+              </div>
+
+              <div class="form-group">
+                <label for="NombreRepresentante">Representante (Si aplica)</label>
+                <input type="text" id="NombreRepresentante" formControlName="NombreRepresentante" placeholder="Nombre del representante" [readonly]="pacienteForm.get('es_dependiente')?.value">
+              </div>
+
+              <div class="form-group">
+                <label for="FechaNacimiento">Fecha de Nacimiento</label>
+                <input type="date" id="FechaNacimiento" formControlName="FechaNacimiento">
+              </div>
+
+              <div class="form-group">
+                <label for="Sexo">Sexo</label>
+                <select id="Sexo" formControlName="Sexo">
+                  <option [value]="0">Femenino</option>
+                  <option [value]="1">Masculino</option>
+                </select>
+              </div>
+              
+              <div class="form-group">
+                <label for="EstadoCivil">Estado Civil</label>
+                <select id="EstadoCivil" formControlName="EstadoCivil">
+                  <option [value]="0">Soltero/a</option>
+                  <option [value]="1">Casado/a</option>
+                  <option [value]="2">Divorciado/a</option>
+                  <option [value]="3">Viudo/a</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="Ocupacion">Ocupación</label>
+                <input type="text" id="Ocupacion" formControlName="Ocupacion" placeholder="Profesión u ocupación">
+              </div>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <h3 class="section-title">Información de Contacto</h3>
+            
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="TelefCelular">Teléfono Celular</label>
+                <input type="text" id="TelefCelular" formControlName="TelefCelular" placeholder="Ej: 0414-1234567">
+              </div>
+              
+              <div class="form-group">
+                <label for="CorreoElectronico">Correo Electrónico</label>
+                <input type="email" id="CorreoElectronico" formControlName="CorreoElectronico" placeholder="paciente@ejemplo.com">
+              </div>
+
+              <div class="form-group">
+                <label for="TelefHabita1">Teléfono Habitación</label>
+                <input type="text" id="TelefHabita1" formControlName="TelefHabita1" placeholder="Teléfono de casa">
+              </div>
+
+              <div class="form-group">
+                <label for="TelefOficina1">Teléfono Oficina</label>
+                <input type="text" id="TelefOficina1" formControlName="TelefOficina1" placeholder="Teléfono de trabajo">
+              </div>
+
+              <div class="form-group full-width">
+                <label for="DireccionHabitacion">Dirección de Habitación</label>
+                <input type="text" id="DireccionHabitacion" formControlName="DireccionHabitacion" placeholder="Dirección completa">
+              </div>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <h3 class="section-title">Información Médica / Clínica</h3>
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="GrupoSanguineo">Grupo Sanguíneo</label>
+                <select id="GrupoSanguineo" formControlName="GrupoSanguineo">
+                  <option [value]="0">No Especificado</option>
+                  <option [value]="1">O</option>
+                  <option [value]="2">A</option>
+                  <option [value]="3">B</option>
+                  <option [value]="4">AB</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="FactorRH">Factor RH</label>
+                <select id="FactorRH" formControlName="FactorRH">
+                  <option [value]="0">Positivo (+)</option>
+                  <option [value]="1">Negativo (-)</option>
+                </select>
+              </div>
+
+              <div class="form-group full-width">
+                <label for="HistoriaClinica">Historia Clínica (Alergias, Antecedentes)</label>
+                <textarea id="HistoriaClinica" formControlName="HistoriaClinica" rows="3" style="width:100%; border:1px solid #e6e8ea; border-radius:0.5rem; padding:12px; font-family: 'Inter', sans-serif;" placeholder="Ingrese antecedentes médicos importantes..."></textarea>
+              </div>
+              
+              <div class="form-group full-width">
+                <label for="ObservacionPresupuesto">Observación General</label>
+                <input type="text" id="ObservacionPresupuesto" formControlName="ObservacionPresupuesto" placeholder="Notas adicionales del paciente">
+              </div>
+            </div>
+          </div>
+
+          <div class="form-actions" *ngIf="!isReadOnly()">
+            <button type="button" class="btn-ghost" routerLink="/pacientes">CANCELAR</button>
+            <button type="submit" class="btn-primary" [disabled]="isSubmitting() || pacienteForm.invalid">
+              {{ isSubmitting() ? 'GUARDANDO...' : (isEditing() ? 'GUARDAR CAMBIOS' : 'REGISTRAR PACIENTE') }}
+            </button>
+          </div>
+
+        </form>
+      </div>
+    </div>
+

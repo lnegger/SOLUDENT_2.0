@@ -1,0 +1,27 @@
+<div class="company-selection-page">
+  <div class="card">
+    <h1>Seleccionar empresa</h1>
+    <p>Elige la compañía con la que deseas trabajar antes de iniciar sesión.</p>
+
+    <div *ngIf="isLoading()" class="loading">Cargando empresas...</div>
+    <div *ngIf="errorMessage()" class="error">{{ errorMessage() }}</div>
+
+    <div *ngIf="!isLoading() && !errorMessage()" class="company-list">
+      <label *ngFor="let empresa of empresas()" class="company-item">
+        <input
+          type="radio"
+          name="empresa"
+          [value]="empresa.CodigoEmpresa"
+          [checked]="selectedCompany() === empresa.CodigoEmpresa"
+          (change)="selectCompany(empresa.CodigoEmpresa)"
+        />
+        <span>
+          <strong>{{ empresa.NombreEmpresa || empresa.Nombre }}</strong>
+          <small>{{ empresa.CodigoEmpresa }}</small>
+        </span>
+      </label>
+    </div>
+
+    <button class="btn-primary" (click)="continue()">Continuar</button>
+  </div>
+</div>
