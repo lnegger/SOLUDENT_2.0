@@ -24,7 +24,7 @@ export class PacienteDashboard implements OnInit {
     { path: 'perfil', label: 'Perfil', icon: '👤' },
     { path: 'odontograma', label: 'Odontograma', icon: '🦷' },
     { path: 'citas', label: 'Citas', icon: '📅️' },
-    { path: 'presupuestos', label: 'Presupuestos', icon: '📝' },
+    { path: 'tratamientos', label: 'Tratamientos', icon: '📝' },
     { path: 'abonos', label: 'Abonos', icon: '💳' }
   ];
 

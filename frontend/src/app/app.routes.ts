@@ -22,7 +22,8 @@ export const routes: Routes = [
         children: [
           { path: '', redirectTo: 'perfil', pathMatch: 'full' },
           { path: 'perfil', loadComponent: () => import('./components/pacientes/paciente-form/paciente-form').then(m => m.PacienteForm) },
-          { path: 'citas', loadComponent: () => import('./components/pacientes/paciente-citas/paciente-citas.component').then(m => m.PacienteCitasComponent) }
+          { path: 'citas', loadComponent: () => import('./components/pacientes/paciente-citas/paciente-citas.component').then(m => m.PacienteCitasComponent) },
+          { path: 'tratamientos', loadComponent: () => import('./components/pacientes/paciente-tratamientos/paciente-tratamientos').then(m => m.PacienteTratamientosComponent) }
         ]
       }
     ]

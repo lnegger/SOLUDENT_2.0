@@ -1,0 +1,200 @@
+<div class="tratamientos-container">
+  <!-- Header Actions -->
+  <div class="header-actions-row">
+    <div class="title-section">
+      <nav class="breadcrumb-mini">
+        <a href="#">ADMINISTRACIÓN</a>
+        <span class="separator">/</span>
+        <span class="current">NUEVO PRESUPUESTO</span>
+      </nav>
+      <h2 class="main-title">Presupuesto del Paciente</h2>
+    </div>
+    <div class="button-group">
+      <button class="btn-ghost">
+        <span class="material-symbols-outlined">mail</span>
+        Enviar por Correo
+      </button>
+      <button class="btn-ghost">
+        <span class="material-symbols-outlined">print</span>
+        Imprimir
+      </button>
+      <button class="btn-primary-gradient">
+        <span class="material-symbols-outlined">save</span>
+        Finalizar y Emitir
+      </button>
+    </div>
+  </div>
+
+  <div class="grid-layout">
+    <!-- Left Column: The Budget/Invoice Builder -->
+    <div class="main-column">
+      <!-- Info Card -->
+      <section class="info-card">
+        <div class="card-glow"></div>
+        <div class="card-content">
+          <div class="info-group">
+            <label>PACIENTE</label>
+            <div class="patient-snippet">
+              <div class="avatar-placeholder">EV</div>
+              <div class="text-details">
+                <h3>Eleanor Vance</h3>
+                <p>RIF: V-{{ pacienteId }} • vance.e@email.com</p>
+              </div>
+            </div>
+          </div>
+          <div class="info-group">
+            <label>DETALLES DEL PRESUPUESTO</label>
+            <div class="details-grid">
+              <div>
+                <p class="label-mini">Fecha de Emisión</p>
+                <p class="value-text">24 Oct, 2023</p>
+              </div>
+              <div>
+                <p class="label-mini">Válido hasta</p>
+                <p class="value-text error">07 Nov, 2023</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Treatment List -->
+      <section class="treatment-list">
+        <div class="section-header">
+          <h4>Conceptos de Tratamiento</h4>
+          <button class="add-btn">
+            <span class="material-symbols-outlined">add_circle</span> 
+            Agregar Fila
+          </button>
+        </div>
+
+        <div class="table-container">
+          <!-- Header -->
+          <div class="table-header">
+            <div class="col-desc">Tratamiento / Procedimiento</div>
+            <div class="col-qty">Cant</div>
+            <div class="col-price">Precio Unit.</div>
+            <div class="col-total">Total</div>
+          </div>
+
+          <!-- Rows -->
+          <div class="table-body">
+            <div *ngFor="let item of items()" class="table-row">
+              <div class="col-desc">
+                <div class="icon-box">
+                  <span class="material-symbols-outlined">{{ item.icon }}</span>
+                </div>
+                <div class="text-info">
+                  <p class="title">{{ item.descripcion }}</p>
+                  <p class="subtitle">{{ item.detalle }}</p>
+                </div>
+              </div>
+              <div class="col-qty">{{ item.cantidad | number:'2.0-0' }}</div>
+              <div class="col-price">${{ item.precioUnitario | number:'1.2-2' }}</div>
+              <div class="col-total">${{ item.total | number:'1.2-2' }}</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Totals Block -->
+        <div class="totals-block">
+          <div class="notes-section">
+            <label>Notas Internas</label>
+            <textarea placeholder="Agregue notas clínicas sobre estos cargos..."></textarea>
+          </div>
+          <div class="summary-section">
+            <div class="summary-row">
+              <span>Subtotal</span>
+              <span class="value">${{ subtotal | number:'1.2-2' }}</span>
+            </div>
+            <div class="summary-row">
+              <span>IVA (0%)</span>
+              <span class="value">${{ iva | number:'1.2-2' }}</span>
+            </div>
+            <div class="summary-row">
+              <span>Cobertura de Seguro</span>
+              <span class="value negative">-${{ seguro | number:'1.2-2' }}</span>
+            </div>
+            <div class="grand-total">
+              <span>Monto Total a Pagar</span>
+              <span class="amount">${{ totalPagar | number:'1.2-2' }}</span>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- Right Column: Payments & Methods -->
+    <div class="side-column">
+      <!-- Payment Processing Card -->
+      <section class="payment-card">
+        <div class="card-bg-icon">
+          <span class="material-symbols-outlined">account_balance_wallet</span>
+        </div>
+        <h4 class="card-title">
+          <span class="material-symbols-outlined filled">account_balance_wallet</span> 
+          Registrar Abono
+        </h4>
+        
+        <div class="payment-form">
+          <div class="input-field">
+            <label>Monto del Abono</label>
+            <div class="input-wrapper">
+              <span class="currency">$</span>
+              <input type="number" [(ngModel)]="montoAbonar">
+            </div>
+          </div>
+
+          <div class="method-selector">
+            <label>Método de Pago</label>
+            <div class="methods-grid">
+              <button *ngFor="let m of ['Efectivo', 'Pago Móvil', 'Zelle', 'Binance', 'Tarjeta', 'Otro']" 
+                      [class.active]="metodoSeleccionado === m"
+                      (click)="seleccionarMetodo(m)">
+                <span class="material-symbols-outlined">{{ 
+                  m === 'Efectivo' ? 'payments' : 
+                  m === 'Pago Móvil' ? 'smartphone' : 
+                  m === 'Zelle' ? 'bolt' : 
+                  m === 'Binance' ? 'currency_bitcoin' : 
+                  m === 'Tarjeta' ? 'credit_card' : 'add' 
+                }}</span>
+                <span>{{ m }}</span>
+              </button>
+            </div>
+          </div>
+
+          <button class="process-btn" (click)="procesarAbono()">Procesar Abono</button>
+        </div>
+      </section>
+
+      <!-- History -->
+      <section class="history-card">
+        <h4 class="section-title">Historial de Abonos</h4>
+        <div class="history-list">
+          <div *ngFor="let abono of abonos()" class="history-item">
+            <div class="item-left">
+              <div class="status-icon">
+                <span class="material-symbols-outlined filled">check_circle</span>
+              </div>
+              <div class="item-info">
+                <p class="name">{{ abono.descripcion }}</p>
+                <p class="meta">{{ abono.metodo }} • {{ abono.fecha }}</p>
+              </div>
+            </div>
+            <span class="amount">${{ abono.monto | number:'1.2-2' }}</span>
+          </div>
+        </div>
+        <button class="view-all-btn">Ver Libro Completo</button>
+      </section>
+
+      <!-- Help Tip -->
+      <div class="info-tip">
+        <span class="material-symbols-outlined">info</span>
+        <div>
+          <p class="tip-title">Paciente tiene seguro activo</p>
+          <p class="tip-text">El plan MetLife Dental Plan B deduce automáticamente hasta un 60% en procedimientos mayores.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
