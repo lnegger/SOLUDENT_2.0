@@ -1,0 +1,79 @@
+<div class="content-area">
+  <div class="breadcrumb">
+    <span routerLink="/directorio/proveedores" style="cursor:pointer;">PROVEEDORES</span> / 
+    <span class="current">{{ isEditMode ? 'EDITAR' : 'NUEVO' }}</span>
+  </div>
+
+  <div class="header-actions">
+    <h1>{{ isEditMode ? 'Editar Proveedor' : 'Nuevo Proveedor' }}</h1>
+    <button class="btn-secondary" routerLink="/directorio/proveedores">Cancelar</button>
+  </div>
+
+  <div class="content-card form-card">
+    <form [formGroup]="provForm" (ngSubmit)="guardar()" class="clinical-form">
+      <div class="form-section">
+        <h3>Datos Principales</h3>
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="CodigoProveedor">Código Proveedor *</label>
+            <input type="text" id="CodigoProveedor" formControlName="CodigoProveedor" class="form-control" [class.is-invalid]="provForm.get('CodigoProveedor')?.invalid && provForm.get('CodigoProveedor')?.touched">
+          </div>
+          <div class="form-group full-width">
+            <label for="NombreProveedor">Nombre Proveedor *</label>
+            <input type="text" id="NombreProveedor" formControlName="NombreProveedor" class="form-control">
+          </div>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <h3>Contacto y Ubicación</h3>
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="Contacto">Persona de Contacto</label>
+            <input type="text" id="Contacto" formControlName="Contacto" class="form-control">
+          </div>
+          <div class="form-group">
+            <label for="CorreoElectronico">Correo Electrónico</label>
+            <input type="email" id="CorreoElectronico" formControlName="CorreoElectronico" class="form-control">
+          </div>
+          <div class="form-group">
+            <label for="TelefonoCelular">Teléfono Celular</label>
+            <input type="text" id="TelefonoCelular" formControlName="TelefonoCelular" class="form-control">
+          </div>
+          <div class="form-group">
+            <label for="TelefonoOficina1">Teléfono Oficina 1</label>
+            <input type="text" id="TelefonoOficina1" formControlName="TelefonoOficina1" class="form-control">
+          </div>
+          <div class="form-group">
+            <label for="TelefonoOficina2">Teléfono Oficina 2</label>
+            <input type="text" id="TelefonoOficina2" formControlName="TelefonoOficina2" class="form-control">
+          </div>
+          <div class="form-group">
+            <label for="Fax">Fax</label>
+            <input type="text" id="Fax" formControlName="Fax" class="form-control">
+          </div>
+          <div class="form-group full-width">
+            <label for="DireccionOficina">Dirección</label>
+            <textarea id="DireccionOficina" formControlName="DireccionOficina" class="form-control" rows="2"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <h3>Información Adicional</h3>
+        <div class="form-grid">
+          <div class="form-group full-width">
+            <label for="Observacion">Observaciones</label>
+            <textarea id="Observacion" formControlName="Observacion" class="form-control" rows="3"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn-primary" [disabled]="provForm.invalid || isSaving">
+          {{ isSaving ? 'Guardando...' : 'Guardar Proveedor' }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,256 @@
+Text                                                                                                                                                                                                                                                           
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+                                                                                                                                                                                                                                                             
+
+                                                                                                                                                                                                                                                             
+
+                                                                                                                                                                                                                                                             
+/****** Object:  Stored Procedure dbo.SP_Edicion_Colegas    Script Date: 05/07/2005 01:26:25 p.m. ******/
+                                                                                                                                                    
+
+                                                                                                                                                                                                                                                             
+
+                                                                                                                                                                                                                                                             
+--DROP PROCEDURE dbo.SP_Edicion_Colegas
+                                                                                                                                                                                                                      
+CREATE PROCEDURE [dbo].[SP_Edicion_Colegas]
+                                                                                                                                                                                                                  
+@Accion 				varchar(3),
+                                                                                                                                                                                                                                      
+@CodCia					varchar(2),
+                                                                                                                                                                                                                                      
+@CodigoColega			varchar(5),
+                                                                                                                                                                                                                                  
+@NombreColega			varchar(50) = '',
+                                                                                                                                                                                                                            
+@DireccionHabitacion	varchar(100) = '',
+                                                                                                                                                                                                                      
+@DireccionOficina		varchar(100) = '',
+                                                                                                                                                                                                                        
+@TelefonoHabitacion1	varchar(15) = '',
+                                                                                                                                                                                                                       
+@TelefonoHabitacion2	varchar(15) = '',
+                                                                                                                                                                                                                       
+@TelefonoOficina1		varchar(15) = '',
+                                                                                                                                                                                                                         
+@TelefonoOficina2		varchar(15) = '',
+                                                                                                                                                                                                                         
+@Fax					varchar(15) = '',
+                                                                                                                                                                                                                                   
+@CorreoElectronico		varchar(45) = '',
+                                                                                                                                                                                                                        
+@TelefonoCelular		varchar(20) = '',
+                                                                                                                                                                                                                          
+@Especialidad			varchar(40) = '',
+                                                                                                                                                                                                                            
+@Observacion			varchar(100) = ''
+                                                                                                                                                                                                                             
+AS
+                                                                                                                                                                                                                                                           
+DECLARE @REGISTROS INT = 0
+                                                                                                                                                                                                                                   
+If @Accion = 'INC' OR @Accion = 'MOD'
+                                                                                                                                                                                                                        
+	BEGIN
+                                                                                                                                                                                                                                                       
+		IF NOT EXISTS(SELECT CodigoColega FROM Colegas 
+                                                                                                                                                                                                            
+			WHERE CodCia = @CodCia 
+                                                                                                                                                                                                                                   
+				AND CodigoColega = @CodigoColega)
+                                                                                                                                                                                                                        
+
+                                                                                                                                                                                                                                                             
+			INSERT INTO Colegas (CodCia,CodigoColega, CamposClave)
+                                                                                                                                                                                                    
+				VALUES(@CodCia, @CodigoColega, @CodCia + @CodigoColega)
+                                                                                                                                                                                                  
+
+                                                                                                                                                                                                                                                             
+		UPDATE	Colegas 
+                                                                                                                                                                                                                                            
+		SET 	NombreColega = @NombreColega,
+                                                                                                                                                                                                                         
+				DireccionHabitacion = @DireccionHabitacion,
+                                                                                                                                                                                                              
+				DireccionOficina = @DireccionOficina,
+                                                                                                                                                                                                                    
+				TelefonoHabitacion1 = @TelefonoHabitacion1,
+                                                                                                                                                                                                              
+				TelefonoHabitacion2 = @TelefonoHabitacion2,
+                                                                                                                                                                                                              
+				TelefonoOficina1 = @TelefonoOficina1,
+                                                                                                                                                                                                                    
+				TelefonoOficina2 = @TelefonoOficina2,
+                                                                                                                                                                                                                    
+				Fax = @Fax,
+                                                                                                                                                                                                                                              
+				CorreoElectronico = @CorreoElectronico,
+                                                                                                                                                                                                                  
+				TelefonoCelular = @TelefonoCelular,
+                                                                                                                                                                                                                      
+				Especialidad = @Especialidad,
+                                                                                                                                                                                                                            
+				Observacion = @Observacion
+                                                                                                                                                                                                                               
+		WHERE CodCia = @CodCia 
+                                                                                                                                                                                                                                    
+				AND CodigoColega = @CodigoColega
+                                                                                                                                                                                                                         
+		SET @REGISTROS = @REGISTROS + @@ROWCOUNT
+                                                                                                                                                                                                                   
+	END
+                                                                                                                                                                                                                                                         
+
+                                                                                                                                                                                                                                                             
+	IF @Accion = 'ELI'
+                                                                                                                                                                                                                                          
+		BEGIN
+                                                                                                                                                                                                                                                      
+			--DELETE Colegas 
+                                                                                                                                                                                                                                         
+			UPDATE COLEGAS
+                                                                                                                                                                                                                                            
+			SET Activo = 'N'
+                                                                                                                                                                                                                                          
+			WHERE CodCia = @CodCia 
+                                                                                                                                                                                                                                   
+					AND CodigoColega = @CodigoColega
+                                                                                                                                                                                                                        
+			SET @REGISTROS = @REGISTROS + @@ROWCOUNT					
+                                                                                                                                                                                                             
+		END 
+                                                                                                                                                                                                                                                       
+	IF @Accion IN ('COU','COT','COB')
+                                                                                                                                                                                                                           
+
+                                                                                                                                                                                                                                                             
+		IF @Accion = 'COB'
+                                                                                                                                                                                                                                         
+			SELECT	CodigoColega,			
+                                                                                                                                                                                                                                   
+					NombreColega,			
+                                                                                                                                                                                                                                        
+					TelefonoOficina1,		
+                                                                                                                                                                                                                                     
+					TelefonoCelular,		
+                                                                                                                                                                                                                                      
+					CorreoElectronico
+                                                                                                                                                                                                                                       
+			FROM Colegas WHERE CodCia = @CodCia AND 
+                                                                                                                                                                                                                  
+						CodigoColega LIKE '%' 
+                                                                                                                                                                                                                                 
+			ORDER BY CodigoColega
+                                                                                                                                                                                                                                     
+		ELSE
+                                                                                                                                                                                                                                                       
+
+                                                                                                                                                                                                                                                             
+			IF @Accion = 'COU'
+                                                                                                                                                                                                                                        
+				SELECT	CodigoColega,			
+                                                                                                                                                                                                                                  
+						NombreColega,			
+                                                                                                                                                                                                                                       
+						DireccionHabitacion,	
+                                                                                                                                                                                                                                  
+						DireccionOficina,		
+                                                                                                                                                                                                                                    
+						TelefonoHabitacion1,	
+                                                                                                                                                                                                                                  
+						TelefonoHabitacion2,	
+                                                                                                                                                                                                                                  
+						TelefonoOficina1,		
+                                                                                                                                                                                                                                    
+						TelefonoOficina2,		
+                                                                                                                                                                                                                                    
+						Fax,				
+                                                                                                                                                                                                                                               
+						CorreoElectronico,		
+                                                                                                                                                                                                                                   
+						TelefonoCelular,		
+                                                                                                                                                                                                                                     
+						Especialidad,			
+                                                                                                                                                                                                                                       
+						Observacion 
+                                                                                                                                                                                                                                           
+				FROM Colegas 
+                                                                                                                                                                                                                                            
+				WHERE CodCia = @CodCia AND 
+                                                                                                                                                                                                                              
+					CodigoColega = @CodigoColega 
+                                                                                                                                                                                                                           
+				ORDER BY CodigoColega
+                                                                                                                                                                                                                                    
+			ELSE
+                                                                                                                                                                                                                                                      
+				SELECT  CodigoColega,			
+                                                                                                                                                                                                                                 
+						NombreColega,			
+                                                                                                                                                                                                                                       
+						DireccionHabitacion,	
+                                                                                                                                                                                                                                  
+						DireccionOficina,		
+                                                                                                                                                                                                                                    
+						TelefonoHabitacion1,	
+                                                                                                                                                                                                                                  
+						TelefonoHabitacion2,	
+                                                                                                                                                                                                                                  
+						TelefonoOficina1,		
+                                                                                                                                                                                                                                    
+						TelefonoOficina2,		
+                                                                                                                                                                                                                                    
+						Fax,				
+                                                                                                                                                                                                                                               
+						CorreoElectronico,		
+                                                                                                                                                                                                                                   
+						TelefonoCelular,		
+                                                                                                                                                                                                                                     
+						Especialidad,			
+                                                                                                                                                                                                                                       
+						Observacion 
+                                                                                                                                                                                                                                           
+				FROM Colegas WHERE CodCia = @CodCia AND 
+                                                                                                                                                                                                                 
+							CodigoColega LIKE '%' 
+                                                                                                                                                                                                                                
+				ORDER BY CodigoColega
+                                                                                                                                                                                                                                    
+	
+                                                                                                                                                                                                                                                            
+	IF	@REGISTROS > 0
+                                                                                                                                                                                                                                           
+		
+                                                                                                                                                                                                                                                           
+			BEGIN
+                                                                                                                                                                                                                                                     
+				IF @Accion = 'INC'
+                                                                                                                                                                                                                                       
+					SELECT 'INCLUIDO' AS RESULTADO
+                                                                                                                                                                                                                          
+				
+                                                                                                                                                                                                                                                         
+				IF @Accion = 'MOD'
+                                                                                                                                                                                                                                       
+					SELECT 'MODIFICADO' AS RESULTADO
+                                                                                                                                                                                                                        
+				
+                                                                                                                                                                                                                                                         
+				IF @Accion = 'ELI'
+                                                                                                                                                                                                                                       
+					SELECT 'ELIMINADO' AS RESULTADO
+                                                                                                                                                                                                                         
+			END		
+                                                                                                                                                                                                                                                     
+
+                                                                                                                                                                                                                                                             
+
+                                                                                                                                                                                                                                                             
+
+                                                                                                                                                                                                                                                             
+
+                                                                                                                                                                                                                                                             
+
+                                                                                                                                                                                                                                                             

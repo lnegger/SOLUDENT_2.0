@@ -25,7 +25,16 @@ export const routes: Routes = [
           { path: 'citas', loadComponent: () => import('./components/pacientes/paciente-citas/paciente-citas.component').then(m => m.PacienteCitasComponent) },
           { path: 'tratamientos', loadComponent: () => import('./components/pacientes/paciente-tratamientos/paciente-tratamientos').then(m => m.PacienteTratamientosComponent) }
         ]
-      }
+      },
+      { path: 'directorio/colegas', loadComponent: () => import('./components/directorio/colegas/colegas-list/colegas-list').then(m => m.ColegasList) },
+      { path: 'directorio/colegas/nuevo', loadComponent: () => import('./components/directorio/colegas/colegas-form/colegas-form').then(m => m.ColegasForm) },
+      { path: 'directorio/colegas/editar/:id', loadComponent: () => import('./components/directorio/colegas/colegas-form/colegas-form').then(m => m.ColegasForm) },
+      { path: 'directorio/laboratorios', loadComponent: () => import('./components/directorio/laboratorios/laboratorios-list/laboratorios-list').then(m => m.LaboratoriosList) },
+      { path: 'directorio/laboratorios/nuevo', loadComponent: () => import('./components/directorio/laboratorios/laboratorios-form/laboratorios-form').then(m => m.LaboratoriosForm) },
+      { path: 'directorio/laboratorios/editar/:id', loadComponent: () => import('./components/directorio/laboratorios/laboratorios-form/laboratorios-form').then(m => m.LaboratoriosForm) },
+      { path: 'directorio/proveedores', loadComponent: () => import('./components/directorio/proveedores/proveedores-list/proveedores-list').then(m => m.ProveedoresList) },
+      { path: 'directorio/proveedores/nuevo', loadComponent: () => import('./components/directorio/proveedores/proveedores-form/proveedores-form').then(m => m.ProveedoresForm) },
+      { path: 'directorio/proveedores/editar/:id', loadComponent: () => import('./components/directorio/proveedores/proveedores-form/proveedores-form').then(m => m.ProveedoresForm) }
     ]
   }
 ];

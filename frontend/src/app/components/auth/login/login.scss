@@ -113,7 +113,7 @@ $font-body: 'Inter', sans-serif;
           &:focus {
             outline: none;
             border-bottom-color: $primary;
-            background-color: darken($surface-container-high, 2%);
+            background-color: color-mix(in srgb, $surface-container-high, black 2%);
           }
 
           &.invalid {

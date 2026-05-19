@@ -18,6 +18,16 @@
       <a routerLink="/finanzas" routerLinkActive="active" class="nav-item">
         <span class="icon">💰</span> FINANZAS
       </a>
+      <div class="nav-item-dropdown" (mouseenter)="showDirectorio = true" (mouseleave)="showDirectorio = false">
+        <div class="nav-item">
+          <span class="icon">📁</span> DIRECTORIO
+        </div>
+        <div class="dropdown-menu" *ngIf="showDirectorio">
+          <a routerLink="/directorio/colegas" routerLinkActive="active" class="dropdown-item">Colegas</a>
+          <a routerLink="/directorio/laboratorios" routerLinkActive="active" class="dropdown-item">Laboratorios</a>
+          <a routerLink="/directorio/proveedores" routerLinkActive="active" class="dropdown-item">Proveedores</a>
+        </div>
+      </div>
       <a routerLink="/configuracion" routerLinkActive="active" class="nav-item">
         <span class="icon">⚙</span> CONFIGURACIÓN
       </a>

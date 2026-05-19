@@ -1,0 +1,66 @@
+<header class="top-bar">
+  <div class="search-container">
+    <span class="search-icon">🔍</span>
+    <input type="text" placeholder="Buscar proveedores..." class="search-input">
+  </div>
+  <div class="top-actions">
+    <button class="icon-btn">🔔</button>
+    <button class="icon-btn">🕒</button>
+  </div>
+</header>
+
+<div class="content-area">
+  <div class="breadcrumb">
+    <span>DIRECTORIO</span> / <span class="current">PROVEEDORES</span>
+  </div>
+
+  <div class="header-actions">
+    <h1>Directorio de Proveedores</h1>
+    <button class="btn-primary" routerLink="/directorio/proveedores/nuevo">
+      <span class="icon">+</span> NUEVO PROVEEDOR
+    </button>
+  </div>
+
+  <div class="content-card table-card">
+    <div *ngIf="isLoading()" class="loading-state">
+      <p>Cargando proveedores...</p>
+    </div>
+
+    <div *ngIf="errorMessage()" class="error-state">
+      <p>{{ errorMessage() }}</p>
+    </div>
+
+    <table class="clinical-table" *ngIf="!isLoading() && !errorMessage()">
+      <thead>
+        <tr>
+          <th>Código</th>
+          <th>Descripción</th>
+          <th>Contacto</th>
+          <th>Teléfono Celular</th>
+          <th>Correo</th>
+          <th class="actions-col">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let p of proveedores()">
+          <td>{{ p.CodigoProveedor }}</td>
+          <td>
+            <div class="user-cell">
+              <div class="name">{{ p.NombreProveedor }}</div>
+            </div>
+          </td>
+          <td>{{ p.Contacto || 'N/A' }}</td>
+          <td>{{ p.TelefonoCelular || 'N/A' }}</td>
+          <td>{{ p.CorreoElectronico || 'N/A' }}</td>
+          <td class="actions-cell">
+            <button class="icon-btn edit-btn" [routerLink]="['/directorio/proveedores/editar', p.CodigoProveedor]" title="Editar">✏️</button>
+            <button class="icon-btn delete-btn" (click)="eliminar(p)" title="Eliminar">🗑️</button>
+          </td>
+        </tr>
+        <tr *ngIf="proveedores().length === 0">
+          <td colspan="6" class="empty-state">No se encontraron proveedores registrados.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

@@ -1,0 +1,67 @@
+<header class="top-bar">
+  <div class="search-container">
+    <span class="search-icon">🔍</span>
+    <input type="text" placeholder="Buscar colegass..." class="search-input">
+  </div>
+  <div class="top-actions">
+    <button class="icon-btn">🔔</button>
+    <button class="icon-btn">🕒</button>
+  </div>
+</header>
+
+<div class="content-area">
+  <div class="breadcrumb">
+    <span>DIRECTORIO</span> / <span class="current">COLEGAS</span>
+  </div>
+
+  <div class="header-actions">
+    <h1>Directorio de Colegas</h1>
+    <button class="btn-primary" routerLink="/directorio/colegas/nuevo">
+      <span class="icon">+</span> NUEVO COLEGA
+    </button>
+  </div>
+
+  <div class="content-card table-card">
+    <div *ngIf="isLoading()" class="loading-state">
+      <p>Cargando colegas...</p>
+    </div>
+
+    <div *ngIf="errorMessage()" class="error-state">
+      <p>{{ errorMessage() }}</p>
+    </div>
+
+    <table class="clinical-table" *ngIf="!isLoading() && !errorMessage()">
+      <thead>
+        <tr>
+          <th>Código</th>
+          <th>Nombre</th>
+          <th>Especialidad</th>
+          <th>Teléfono Celular</th>
+          <th>Correo</th>
+          <th class="actions-col">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let c of colegas()">
+          <td>{{ c.CodigoColega }}</td>
+          <td>
+            <div class="user-cell">
+              <div class="name">{{ c.NombreColega }}</div>
+              <div class="cedula">{{ c.Contacto || 'Sin contacto principal' }}</div>
+            </div>
+          </td>
+          <td>{{ c.Especialidad || 'N/A' }}</td>
+          <td>{{ c.TelefonoCelular || 'N/A' }}</td>
+          <td>{{ c.CorreoElectronico || 'N/A' }}</td>
+          <td class="actions-cell">
+            <button class="icon-btn edit-btn" [routerLink]="['/directorio/colegas/editar', c.CodigoColega]" title="Editar">✏️</button>
+            <button class="icon-btn delete-btn" (click)="eliminar(c)" title="Eliminar">🗑️</button>
+          </td>
+        </tr>
+        <tr *ngIf="colegas().length === 0">
+          <td colspan="6" class="empty-state">No se encontraron colegas registrados.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

@@ -110,3 +110,65 @@ class CitaResponse(CitaBase):
     class Config:
         from_attributes = True
 
+# Esquemas para Directorio
+
+class DirectorioBase(BaseModel):
+    Contacto: Optional[str] = None
+    DireccionOficina: Optional[str] = None
+    TelefonoOficina1: Optional[str] = None
+    TelefonoOficina2: Optional[str] = None
+    Fax: Optional[str] = None
+    CorreoElectronico: Optional[str] = None
+    TelefonoCelular: Optional[str] = None
+    Especialidad: Optional[str] = None
+    Observacion: Optional[str] = None
+
+class ColegaBase(BaseModel):
+    CodigoColega: str
+    NombreColega: str
+    DireccionHabitacion: Optional[str] = None
+    DireccionOficina: Optional[str] = None
+    TelefonoHabitacion1: Optional[str] = None
+    TelefonoHabitacion2: Optional[str] = None
+    TelefonoOficina1: Optional[str] = None
+    TelefonoOficina2: Optional[str] = None
+    Fax: Optional[str] = None
+    CorreoElectronico: Optional[str] = None
+    TelefonoCelular: Optional[str] = None
+    Especialidad: Optional[str] = None
+    Observacion: Optional[str] = None
+
+class ColegaCreate(ColegaBase):
+    pass
+
+class ColegaResponse(ColegaBase):
+    CodCia: Optional[str] = None
+
+    class Config:
+        from_attributes = True
+
+class LaboratorioBase(DirectorioBase):
+    CodigoLaboratorio: str
+    NombreLaboratorio: str
+
+class LaboratorioCreate(LaboratorioBase):
+    pass
+
+class LaboratorioResponse(LaboratorioBase):
+    CodCia: Optional[str] = None
+
+    class Config:
+        from_attributes = True
+
+class ProveedorBase(DirectorioBase):
+    CodigoProveedor: str
+    NombreProveedor: str
+
+class ProveedorCreate(ProveedorBase):
+    pass
+
+class ProveedorResponse(ProveedorBase):
+    CodCia: Optional[str] = None
+
+    class Config:
+        from_attributes = True

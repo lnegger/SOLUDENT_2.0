@@ -25,11 +25,12 @@ app.add_middleware(
 # Montar carpeta estática
 app.mount("/static", StaticFiles(directory="uploads"), name="static") # Montar carpeta estática
 
-from app.routers import pacientes, upload, empresas, citas # Importamos los routers
+from app.routers import pacientes, upload, empresas, citas, directorio # Importamos los routers
 app.include_router(pacientes.router)
 app.include_router(upload.router)
 app.include_router(empresas.router)
 app.include_router(citas.router)
+app.include_router(directorio.router)
 
 
 @app.get("/")

@@ -1,0 +1,91 @@
+<div class="content-area">
+  <div class="breadcrumb">
+    <span routerLink="/directorio/colegas" style="cursor:pointer;">COLEGAS</span> / 
+    <span class="current">{{ isEditMode ? 'EDITAR' : 'NUEVO' }}</span>
+  </div>
+
+  <div class="header-actions">
+    <h1>{{ isEditMode ? 'Editar Colega' : 'Nuevo Colega' }}</h1>
+    <button class="btn-secondary" routerLink="/directorio/colegas">Cancelar</button>
+  </div>
+
+  <div class="content-card form-card">
+    <form [formGroup]="colegaForm" (ngSubmit)="guardar()" class="clinical-form">
+      <div class="form-section">
+        <h3>Datos Principales</h3>
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="CodigoColega">Código Colega *</label>
+            <input type="text" id="CodigoColega" formControlName="CodigoColega" class="form-control" [class.is-invalid]="colegaForm.get('CodigoColega')?.invalid && colegaForm.get('CodigoColega')?.touched">
+          </div>
+          <div class="form-group">
+            <label for="NombreColega">Nombre Completo *</label>
+            <input type="text" id="NombreColega" formControlName="NombreColega" class="form-control">
+          </div>
+          <div class="form-group">
+            <label for="Especialidad">Especialidad</label>
+            <input type="text" id="Especialidad" formControlName="Especialidad" class="form-control">
+          </div>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <h3>Contacto y Ubicación</h3>
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="CorreoElectronico">Correo Electrónico</label>
+            <input type="email" id="CorreoElectronico" formControlName="CorreoElectronico" class="form-control">
+          </div>
+          <div class="form-group">
+            <label for="TelefonoCelular">Teléfono Celular</label>
+            <input type="text" id="TelefonoCelular" formControlName="TelefonoCelular" class="form-control">
+          </div>
+          <div class="form-group">
+            <label for="TelefonoOficina1">Teléfono Oficina 1</label>
+            <input type="text" id="TelefonoOficina1" formControlName="TelefonoOficina1" class="form-control">
+          </div>
+          <div class="form-group">
+            <label for="TelefonoOficina2">Teléfono Oficina 2</label>
+            <input type="text" id="TelefonoOficina2" formControlName="TelefonoOficina2" class="form-control">
+          </div>
+          <div class="form-group">
+            <label for="TelefonoHabitacion1">Teléfono Habitación 1</label>
+            <input type="text" id="TelefonoHabitacion1" formControlName="TelefonoHabitacion1" class="form-control">
+          </div>
+          <div class="form-group">
+            <label for="TelefonoHabitacion2">Teléfono Habitación 2</label>
+            <input type="text" id="TelefonoHabitacion2" formControlName="TelefonoHabitacion2" class="form-control">
+          </div>
+          <div class="form-group">
+            <label for="Fax">Fax</label>
+            <input type="text" id="Fax" formControlName="Fax" class="form-control">
+          </div>
+          <div class="form-group full-width">
+            <label for="DireccionOficina">Dirección de Oficina</label>
+            <textarea id="DireccionOficina" formControlName="DireccionOficina" class="form-control" rows="2"></textarea>
+          </div>
+          <div class="form-group full-width">
+            <label for="DireccionHabitacion">Dirección de Habitación</label>
+            <textarea id="DireccionHabitacion" formControlName="DireccionHabitacion" class="form-control" rows="2"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <h3>Información Adicional</h3>
+        <div class="form-grid">
+          <div class="form-group full-width">
+            <label for="Observacion">Observaciones</label>
+            <textarea id="Observacion" formControlName="Observacion" class="form-control" rows="3"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn-primary" [disabled]="colegaForm.invalid || isSaving">
+          {{ isSaving ? 'Guardando...' : 'Guardar Colega' }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

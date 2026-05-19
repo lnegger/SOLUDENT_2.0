@@ -14,16 +14,17 @@ params = urllib.parse.quote_plus(
     f"DRIVER={{{DRIVER}}};SERVER={SERVER};DATABASE={DATABASE};UID={USERNAME};PWD={PASSWORD};TrustServerCertificate=yes"
 )
 
-SQLALCHEMY_DATABASE_URL = f"mssql+pyodbc:///?odbc_connect={params}"
+SQLALCHEMY_DATABASE_URL = f"mssql+pyodbc:///?odbc_connect={params}" 
 
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 Base = declarative_base()
 
+## las siguientes lineas se instrodujeron para la consulta de datos en tiempo real 
 def get_db():
-    db = SessionLocal()
-    try:
-        yield db
+    db = SessionLocal() ## creamos una sesion de base de datos
+    try: 
+        yield db ## cedemos el control de la sesion a la funcion que la necesita
     finally:
-        db.close()
+        db.close() ## cerramos la sesion cuando ya no se necesita

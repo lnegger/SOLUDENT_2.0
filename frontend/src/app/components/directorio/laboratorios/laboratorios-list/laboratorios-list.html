@@ -1,0 +1,66 @@
+<header class="top-bar">
+  <div class="search-container">
+    <span class="search-icon">🔍</span>
+    <input type="text" placeholder="Buscar laboratorios..." class="search-input">
+  </div>
+  <div class="top-actions">
+    <button class="icon-btn">🔔</button>
+    <button class="icon-btn">🕒</button>
+  </div>
+</header>
+
+<div class="content-area">
+  <div class="breadcrumb">
+    <span>DIRECTORIO</span> / <span class="current">LABORATORIOS</span>
+  </div>
+
+  <div class="header-actions">
+    <h1>Directorio de Laboratorios</h1>
+    <button class="btn-primary" routerLink="/directorio/laboratorios/nuevo">
+      <span class="icon">+</span> NUEVO LABORATORIO
+    </button>
+  </div>
+
+  <div class="content-card table-card">
+    <div *ngIf="isLoading()" class="loading-state">
+      <p>Cargando laboratorios...</p>
+    </div>
+
+    <div *ngIf="errorMessage()" class="error-state">
+      <p>{{ errorMessage() }}</p>
+    </div>
+
+    <table class="clinical-table" *ngIf="!isLoading() && !errorMessage()">
+      <thead>
+        <tr>
+          <th>Código</th>
+          <th>Descripción</th>
+          <th>Contacto</th>
+          <th>Teléfono Celular</th>
+          <th>Correo</th>
+          <th class="actions-col">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let l of laboratorios()">
+          <td>{{ l.CodigoLaboratorio }}</td>
+          <td>
+            <div class="user-cell">
+              <div class="name">{{ l.NombreLaboratorio }}</div>
+            </div>
+          </td>
+          <td>{{ l.Contacto || 'N/A' }}</td>
+          <td>{{ l.TelefonoCelular || 'N/A' }}</td>
+          <td>{{ l.CorreoElectronico || 'N/A' }}</td>
+          <td class="actions-cell">
+            <button class="icon-btn edit-btn" [routerLink]="['/directorio/laboratorios/editar', l.CodigoLaboratorio]" title="Editar">✏️</button>
+            <button class="icon-btn delete-btn" (click)="eliminar(l)" title="Eliminar">🗑️</button>
+          </td>
+        </tr>
+        <tr *ngIf="laboratorios().length === 0">
+          <td colspan="6" class="empty-state">No se encontraron laboratorios registrados.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

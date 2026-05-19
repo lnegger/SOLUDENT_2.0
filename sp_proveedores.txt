@@ -1,0 +1,276 @@
+Text                                                                                                                                                                                                                                                           
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+                                                                                                                                                                                                                                                             
+
+                                                                                                                                                                                                                                                             
+
+                                                                                                                                                                                                                                                             
+/****** Object:  Stored Procedure dbo.SP_Edicion_Proveedores    Script Date: 05/07/2005 01:26:26 p.m. ******/
+                                                                                                                                                
+
+                                                                                                                                                                                                                                                             
+
+                                                                                                                                                                                                                                                             
+--DROP PROCEDURE dbo.SP_Edicion_Proveedores
+                                                                                                                                                                                                                  
+CREATE PROCEDURE [dbo].[SP_Edicion_Proveedores]
+                                                                                                                                                                                                              
+@Accion 			varchar(3),
+                                                                                                                                                                                                                                       
+@CodCia				varchar(2),
+                                                                                                                                                                                                                                       
+@CodigoProveedor	varchar(5),
+                                                                                                                                                                                                                                 
+@NombreProveedor	varchar(50) = '',
+                                                                                                                                                                                                                           
+@Contacto			varchar(50) = '',
+                                                                                                                                                                                                                                
+@DireccionOficina	varchar(100) = '',
+                                                                                                                                                                                                                         
+@TelefonoOficina1	varchar(15) = '',
+                                                                                                                                                                                                                          
+@TelefonoOficina2	varchar(15) = '',
+                                                                                                                                                                                                                          
+@Fax				varchar(15) = '',
+                                                                                                                                                                                                                                    
+@CorreoElectronico	varchar(45) = '',
+                                                                                                                                                                                                                         
+@TelefonoCelular	varchar(20) = '',
+                                                                                                                                                                                                                           
+@Especialidad		varchar(50) = '',
+                                                                                                                                                                                                                             
+@Observacion		varchar(100) = ''
+                                                                                                                                                                                                                              
+ /*,
+                                                                                                                                                                                                                                                         
+@LimiteCredito		numeric(11,2),
+                                                                                                                                                                                                                               
+@DiasCredito		smallint,
+                                                                                                                                                                                                                                      
+@FechaUltCompa		datetime,
+                                                                                                                                                                                                                                    
+@MontoUltCompra		numeric(11,2),
+                                                                                                                                                                                                                              
+@Saldo				numeric(11,2),
+                                                                                                                                                                                                                                     
+@Pagos				numeric(11,2),
+                                                                                                                                                                                                                                     
+@Debitos			numeric(11,2),
+                                                                                                                                                                                                                                    
+@Creditos			numeric(11,2),
+                                                                                                                                                                                                                                   
+@PagosAdelantados	numeric(11,2) */
+                                                                                                                                                                                                                           
+
+                                                                                                                                                                                                                                                             
+AS
+                                                                                                                                                                                                                                                           
+--exec SP_Edicion_Proveedores 'COT','01','00001'
+                                                                                                                                                                                                             
+
+                                                                                                                                                                                                                                                             
+DECLARE @REGISTROS INT = 0
+                                                                                                                                                                                                                                   
+If @Accion = 'INC' OR @Accion = 'MOD'
+                                                                                                                                                                                                                        
+	BEGIN
+                                                                                                                                                                                                                                                       
+		IF NOT EXISTS(SELECT CodigoProveedor FROM Proveedores 
+                                                                                                                                                                                                     
+			WHERE CodCia = @CodCia 
+                                                                                                                                                                                                                                   
+				AND CodigoProveedor = @CodigoProveedor)
+                                                                                                                                                                                                                  
+
+                                                                                                                                                                                                                                                             
+			INSERT INTO Proveedores (CodCia,CodigoProveedor,CamposClave)
+                                                                                                                                                                                              
+				VALUES(@CodCia, @CodigoProveedor, (@CodCia + @CodigoProveedor))
+                                                                                                                                                                                          
+
+                                                                                                                                                                                                                                                             
+		UPDATE Proveedores SET 
+                                                                                                                                                                                                                                    
+						NombreProveedor = @NombreProveedor,
+                                                                                                                                                                                                                    
+						Contacto = @Contacto,
+                                                                                                                                                                                                                                  
+						DireccionOficina = @DireccionOficina,
+                                                                                                                                                                                                                  
+						TelefonoOficina1 = @TelefonoOficina1,
+                                                                                                                                                                                                                  
+						TelefonoOficina2 = @TelefonoOficina2,
+                                                                                                                                                                                                                  
+						Fax = @Fax,
+                                                                                                                                                                                                                                            
+						CorreoElectronico = @CorreoElectronico,
+                                                                                                                                                                                                                
+						TelefonoCelular = @TelefonoCelular,
+                                                                                                                                                                                                                    
+						Especialidad = @Especialidad,
+                                                                                                                                                                                                                          
+						Observacion = @Observacion
+                                                                                                                                                                                                                             
+/*
+                                                                                                                                                                                                                                                           
+Para ser utilizado en otro sitio por si se necesita
+                                                                                                                                                                                                          
+						@LimiteCredito = @LimiteCredito
+                                                                                                                                                                                                                        
+						@DiasCredito = @DiasCredito
+                                                                                                                                                                                                                            
+						@FechaUltCompa = @FechaUltCompa
+                                                                                                                                                                                                                        
+						@MontoUltCompra = @MontoUltCompra
+                                                                                                                                                                                                                      
+						@Saldo = @Saldo
+                                                                                                                                                                                                                                        
+						@Pagos = @Pagos
+                                                                                                                                                                                                                                        
+						@Debitos = @Debitos
+                                                                                                                                                                                                                                    
+						@Creditos = @Creditos
+                                                                                                                                                                                                                                  
+						@PagosAdelantados = @PagosAdelantados
+                                                                                                                                                                                                                  
+*/
+                                                                                                                                                                                                                                                           
+		WHERE CodCia = @CodCia 
+                                                                                                                                                                                                                                    
+				AND CodigoProveedor = @CodigoProveedor
+                                                                                                                                                                                                                   
+		SET @REGISTROS = @REGISTROS + @@ROWCOUNT
+                                                                                                                                                                                                                   
+	END
+                                                                                                                                                                                                                                                         
+	IF @Accion = 'ELI'
+                                                                                                                                                                                                                                          
+		BEGIN
+                                                                                                                                                                                                                                                      
+			--DELETE Proveedores 
+                                                                                                                                                                                                                                     
+			UPDATE Proveedores
+                                                                                                                                                                                                                                        
+			SET Activo = 'N'
+                                                                                                                                                                                                                                          
+			WHERE CodCia = @CodCia 
+                                                                                                                                                                                                                                   
+					AND CodigoProveedor = @CodigoProveedor
+                                                                                                                                                                                                                  
+			SET @REGISTROS = @REGISTROS + @@ROWCOUNT					
+                                                                                                                                                                                                             
+		END
+                                                                                                                                                                                                                                                        
+
+                                                                                                                                                                                                                                                             
+	IF @Accion IN ('COU','COT','COB')
+                                                                                                                                                                                                                           
+		IF @Accion = 'COB'
+                                                                                                                                                                                                                                         
+		--- SI VIENE DEL BROWSE NO SE NECESITA MOSTRAR TODOS LOS DATOS
+                                                                                                                                                                                             
+			SELECT CodigoProveedor,
+                                                                                                                                                                                                                                   
+				NombreProveedor,
+                                                                                                                                                                                                                                         
+				TelefonoOficina1,
+                                                                                                                                                                                                                                        
+				TelefonoOficina2
+                                                                                                                                                                                                                                         
+			FROM Proveedores WHERE CodCia = @CodCia AND 
+                                                                                                                                                                                                              
+						CodigoProveedor like '%' 
+                                                                                                                                                                                                                              
+		ELSE
+                                                                                                                                                                                                                                                       
+			IF @Accion = 'COU'
+                                                                                                                                                                                                                                        
+				--- SI SE CONSULTA A UN SOLO REGISTRO SE NECESITAN TODOS LOS DATOS 
+                                                                                                                                                                                      
+				SELECT CodigoProveedor,
+                                                                                                                                                                                                                                  
+					NombreProveedor,
+                                                                                                                                                                                                                                        
+					Contacto,
+                                                                                                                                                                                                                                               
+					DireccionOficina,
+                                                                                                                                                                                                                                       
+					TelefonoOficina1,
+                                                                                                                                                                                                                                       
+					TelefonoOficina2,
+                                                                                                                                                                                                                                       
+					Fax,
+                                                                                                                                                                                                                                                    
+					CorreoElectronico,
+                                                                                                                                                                                                                                      
+					TelefonoCelular,
+                                                                                                                                                                                                                                        
+					Especialidad,
+                                                                                                                                                                                                                                           
+					Observacion 
+                                                                                                                                                                                                                                            
+				FROM Proveedores 
+                                                                                                                                                                                                                                        
+				WHERE CodCia = @CodCia AND 
+                                                                                                                                                                                                                              
+						CodigoProveedor = @CodigoProveedor 
+                                                                                                                                                                                                                    
+			ELSE
+                                                                                                                                                                                                                                                      
+				SELECT CodigoProveedor,
+                                                                                                                                                                                                                                  
+					NombreProveedor,
+                                                                                                                                                                                                                                        
+					Contacto,
+                                                                                                                                                                                                                                               
+					DireccionOficina,
+                                                                                                                                                                                                                                       
+					TelefonoOficina1,
+                                                                                                                                                                                                                                       
+					TelefonoOficina2,
+                                                                                                                                                                                                                                       
+					Fax,
+                                                                                                                                                                                                                                                    
+					CorreoElectronico,
+                                                                                                                                                                                                                                      
+					TelefonoCelular,
+                                                                                                                                                                                                                                        
+					Especialidad,
+                                                                                                                                                                                                                                           
+					Observacion 
+                                                                                                                                                                                                                                            
+				FROM Proveedores 
+                                                                                                                                                                                                                                        
+				WHERE CodCia = @CodCia AND 
+                                                                                                                                                                                                                              
+						CodigoProveedor LIKE '%' 
+                                                                                                                                                                                                                              
+	
+                                                                                                                                                                                                                                                            
+	IF	@REGISTROS > 0
+                                                                                                                                                                                                                                           
+	
+                                                                                                                                                                                                                                                            
+		BEGIN
+                                                                                                                                                                                                                                                      
+			IF @Accion = 'INC'
+                                                                                                                                                                                                                                        
+				SELECT 'INCLUIDO' AS RESULTADO
+                                                                                                                                                                                                                           
+			
+                                                                                                                                                                                                                                                          
+			IF @Accion = 'MOD'
+                                                                                                                                                                                                                                        
+				SELECT 'MODIFICADO' AS RESULTADO
+                                                                                                                                                                                                                         
+			
+                                                                                                                                                                                                                                                          
+			IF @Accion = 'ELI'
+                                                                                                                                                                                                                                        
+				SELECT 'ELIMINADO' AS RESULTADO
+                                                                                                                                                                                                                          
+		END	
+                                                                                                                                                                                                                                                       
+
+                                                                                                                                                                                                                                                             

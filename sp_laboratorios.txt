@@ -1,0 +1,308 @@
+Text                                                                                                                                                                                                                                                           
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+                                                                                                                                                                                                                                                             
+
+                                                                                                                                                                                                                                                             
+
+                                                                                                                                                                                                                                                             
+/****** Object:  Stored Procedure dbo.SP_Edicion_Laboratorios    Script Date: 05/07/2005 01:26:26 p.m. ******/
+                                                                                                                                               
+
+                                                                                                                                                                                                                                                             
+
+                                                                                                                                                                                                                                                             
+--DROP PROCEDURE dbo.SP_Edicion_Laboratorios
+                                                                                                                                                                                                                 
+CREATE PROCEDURE [dbo].[SP_Edicion_Laboratorios]
+                                                                                                                                                                                                             
+@Accion 			varchar(3),
+                                                                                                                                                                                                                                       
+@CodCia				varchar(2),
+                                                                                                                                                                                                                                       
+@CodigoLaboratorio	varchar(5),
+                                                                                                                                                                                                                               
+@NombreLaboratorio	varchar(50) = '',
+                                                                                                                                                                                                                         
+@Contacto			varchar(50) = '',
+                                                                                                                                                                                                                                
+@DireccionOficina	varchar(100) = '',
+                                                                                                                                                                                                                         
+@TelefonoOficina1	varchar(15) = '',
+                                                                                                                                                                                                                          
+@TelefonoOficina2	varchar(15) = '',
+                                                                                                                                                                                                                          
+@Fax				varchar(15) = '',
+                                                                                                                                                                                                                                    
+@CorreoElectronico	varchar(45) = '',
+                                                                                                                                                                                                                         
+@TelefonoCelular	varchar(20) = '',
+                                                                                                                                                                                                                           
+@Especialidad		varchar(50) = '',
+                                                                                                                                                                                                                             
+@Observacion		varchar(100) = '' 
+                                                                                                                                                                                                                             
+
+                                                                                                                                                                                                                                                             
+
+                                                                                                                                                                                                                                                             
+AS
+                                                                                                                                                                                                                                                           
+
+                                                                                                                                                                                                                                                             
+--exec SP_Edicion_Laboratorios 'COU','01','00002'
+                                                                                                                                                                                                            
+DECLARE @REGISTROS INT = 0
+                                                                                                                                                                                                                                   
+If @Accion = 'INC' OR @Accion = 'MOD'
+                                                                                                                                                                                                                        
+	BEGIN
+                                                                                                                                                                                                                                                       
+		IF NOT EXISTS(SELECT CodigoLaboratorio FROM Laboratorios 
+                                                                                                                                                                                                  
+			WHERE CodCia = @CodCia 
+                                                                                                                                                                                                                                   
+				AND CodigoLaboratorio = @CodigoLaboratorio)
+                                                                                                                                                                                                              
+
+                                                                                                                                                                                                                                                             
+			INSERT INTO Laboratorios (CodCia,CodigoLaboratorio,CamposClave)
+                                                                                                                                                                                           
+				VALUES(@CodCia, @CodigoLaboratorio, (@CodCia + @CodigoLaboratorio))
+                                                                                                                                                                                      
+
+                                                                                                                                                                                                                                                             
+		UPDATE Laboratorios SET 
+                                                                                                                                                                                                                                   
+						NombreLaboratorio = @NombreLaboratorio,
+                                                                                                                                                                                                                
+						Contacto = @Contacto,
+                                                                                                                                                                                                                                  
+						DireccionOficina = @DireccionOficina,
+                                                                                                                                                                                                                  
+						TelefonoOficina1 = @TelefonoOficina1,
+                                                                                                                                                                                                                  
+						TelefonoOficina2 = @TelefonoOficina2,
+                                                                                                                                                                                                                  
+						Fax = @Fax,
+                                                                                                                                                                                                                                            
+						CorreoElectronico = @CorreoElectronico,
+                                                                                                                                                                                                                
+						TelefonoCelular = @TelefonoCelular,
+                                                                                                                                                                                                                    
+						Especialidad = @Especialidad,
+                                                                                                                                                                                                                          
+						Observacion = @Observacion
+                                                                                                                                                                                                                             
+
+                                                                                                                                                                                                                                                             
+		WHERE CodCia = @CodCia 
+                                                                                                                                                                                                                                    
+				AND CodigoLaboratorio = @CodigoLaboratorio
+                                                                                                                                                                                                               
+		SET @REGISTROS = @REGISTROS + @@ROWCOUNT
+                                                                                                                                                                                                                   
+	END
+                                                                                                                                                                                                                                                         
+	IF @Accion = 'ELI'
+                                                                                                                                                                                                                                          
+		BEGIN
+                                                                                                                                                                                                                                                      
+			--DELETE Laboratorios 
+                                                                                                                                                                                                                                    
+			UPDATE Laboratorios
+                                                                                                                                                                                                                                       
+			SET Activo = 'N'
+                                                                                                                                                                                                                                          
+			WHERE CodCia = @CodCia 
+                                                                                                                                                                                                                                   
+					AND CodigoLaboratorio = @CodigoLaboratorio
+                                                                                                                                                                                                              
+			SET @REGISTROS = @REGISTROS + @@ROWCOUNT					
+                                                                                                                                                                                                             
+		END 
+                                                                                                                                                                                                                                                       
+	IF @Accion IN ('COU','COT','COB')
+                                                                                                                                                                                                                           
+		IF @Accion = 'COB'
+                                                                                                                                                                                                                                         
+			SELECT CodigoLaboratorio,NombreLaboratorio,TelefonoOficina1,		
+                                                                                                                                                                                            
+					TelefonoCelular, CorreoElectronico FROM Laboratorios WHERE CodCia = @CodCia AND 
+                                                                                                                                                                        
+						CodigoLaboratorio like '%' 
+                                                                                                                                                                                                                            
+		ELSE
+                                                                                                                                                                                                                                                       
+			IF @Accion = 'COU'
+                                                                                                                                                                                                                                        
+				SELECT CodigoLaboratorio,
+                                                                                                                                                                                                                                
+					NombreLaboratorio,
+                                                                                                                                                                                                                                      
+					Contacto,
+                                                                                                                                                                                                                                               
+					DireccionOficina,
+                                                                                                                                                                                                                                       
+					TelefonoOficina1,
+                                                                                                                                                                                                                                       
+					TelefonoOficina2,
+                                                                                                                                                                                                                                       
+					Fax,
+                                                                                                                                                                                                                                                    
+					CorreoElectronico,
+                                                                                                                                                                                                                                      
+					TelefonoCelular,
+                                                                                                                                                                                                                                        
+					Especialidad,
+                                                                                                                                                                                                                                           
+					Observacion 
+                                                                                                                                                                                                                                            
+				FROM Laboratorios 
+                                                                                                                                                                                                                                       
+				WHERE CodCia = @CodCia AND 
+                                                                                                                                                                                                                              
+						CodigoLaboratorio = @CodigoLaboratorio 
+                                                                                                                                                                                                                
+			ELSE
+                                                                                                                                                                                                                                                      
+				SELECT CodigoLaboratorio,
+                                                                                                                                                                                                                                
+					NombreLaboratorio,
+                                                                                                                                                                                                                                      
+					Contacto,
+                                                                                                                                                                                                                                               
+					DireccionOficina,
+                                                                                                                                                                                                                                       
+					TelefonoOficina1,
+                                                                                                                                                                                                                                       
+					TelefonoOficina2,
+                                                                                                                                                                                                                                       
+					Fax,
+                                                                                                                                                                                                                                                    
+					CorreoElectronico,
+                                                                                                                                                                                                                                      
+					TelefonoCelular,
+                                                                                                                                                                                                                                        
+					Especialidad,
+                                                                                                                                                                                                                                           
+					Observacion 
+                                                                                                                                                                                                                                            
+				FROM Laboratorios 
+                                                                                                                                                                                                                                       
+				WHERE CodCia = @CodCia AND 
+                                                                                                                                                                                                                              
+						CodigoLaboratorio LIKE '%' 
+                                                                                                                                                                                                                            
+	
+                                                                                                                                                                                                                                                            
+	IF	@REGISTROS > 0
+                                                                                                                                                                                                                                           
+	
+                                                                                                                                                                                                                                                            
+		BEGIN
+                                                                                                                                                                                                                                                      
+			IF @Accion = 'INC'
+                                                                                                                                                                                                                                        
+				SELECT 'INCLUIDO' AS RESULTADO
+                                                                                                                                                                                                                           
+			
+                                                                                                                                                                                                                                                          
+			IF @Accion = 'MOD'
+                                                                                                                                                                                                                                        
+				SELECT 'MODIFICADO' AS RESULTADO
+                                                                                                                                                                                                                         
+			
+                                                                                                                                                                                                                                                          
+			IF @Accion = 'ELI'
+                                                                                                                                                                                                                                        
+				SELECT 'ELIMINADO' AS RESULTADO
+                                                                                                                                                                                                                          
+		END		
+                                                                                                                                                                                                                                                      
+
+                                                                                                                                                                                                                                                             
+/*
+                                                                                                                                                                                                                                                           
+If @Accion = 'INC' OR @Accion = 'MOD'
+                                                                                                                                                                                                                        
+	BEGIN
+                                                                                                                                                                                                                                                       
+		IF NOT EXISTS(SELECT CodigoArea FROM Areas WHERE CodCia = @CodCia AND 
+                                                                                                                                                                                     
+					CodigoArea = @CodigoArea)
+                                                                                                                                                                                                                               
+			INSERT INTO Areas (CodCia, CodigoArea,CamposClave)
+                                                                                                                                                                                                        
+				VALUES(@CodCia, @CodigoArea,@CodCia + @CodigoArea)
+                                                                                                                                                                                                       
+
+                                                                                                                                                                                                                                                             
+		UPDATE Areas SET NombreArea = @NombreArea
+                                                                                                                                                                                                                  
+			WHERE CodCia = @CodCia AND CodigoArea = @CodigoArea
+                                                                                                                                                                                                       
+		SET @REGISTROS = @REGISTROS + @@ROWCOUNT
+                                                                                                                                                                                                                   
+
+                                                                                                                                                                                                                                                             
+	END
+                                                                                                                                                                                                                                                         
+	IF @Accion = 'ELI'
+                                                                                                                                                                                                                                          
+		BEGIN
+                                                                                                                                                                                                                                                      
+			DELETE Areas WHERE CodCia = @CodCia AND CodigoArea = @CodigoArea
+                                                                                                                                                                                          
+			SET @REGISTROS = @REGISTROS + @@ROWCOUNT
+                                                                                                                                                                                                                  
+		END
+                                                                                                                                                                                                                                                        
+
+                                                                                                                                                                                                                                                             
+	IF @Accion IN ('COU','COT')
+                                                                                                                                                                                                                                 
+		IF @Accion = 'COU'
+                                                                                                                                                                                                                                         
+			SELECT CodigoArea,NombreArea FROM Areas WHERE CodCia = @CodCia AND 
+                                                                                                                                                                                       
+						CodigoArea = @CodigoArea 
+                                                                                                                                                                                                                              
+		ELSE
+                                                                                                                                                                                                                                                       
+			SELECT CodigoArea,NombreArea FROM Areas WHERE CodCia = @CodCia AND 
+                                                                                                                                                                                       
+						CodigoArea LIKE '%' 
+                                                                                                                                                                                                                                   
+	IF	@REGISTROS > 0
+                                                                                                                                                                                                                                           
+	
+                                                                                                                                                                                                                                                            
+		BEGIN
+                                                                                                                                                                                                                                                      
+			IF @Accion = 'INC'
+                                                                                                                                                                                                                                        
+				SELECT 'INCLUIDO' AS RESULTADO
+                                                                                                                                                                                                                           
+			
+                                                                                                                                                                                                                                                          
+			IF @Accion = 'MOD'
+                                                                                                                                                                                                                                        
+				SELECT 'MODIFICADO' AS RESULTADO
+                                                                                                                                                                                                                         
+			
+                                                                                                                                                                                                                                                          
+			IF @Accion = 'ELI'
+                                                                                                                                                                                                                                        
+				SELECT 'ELIMINADO' AS RESULTADO
+                                                                                                                                                                                                                          
+		END		
+                                                                                                                                                                                                                                                      
+
+                                                                                                                                                                                                                                                             
+*/
+                                                                                                                                                                                                                                                           
+
+                                                                                                                                                                                                                                                             
+
+                                                                                                                                                                                                                                                             

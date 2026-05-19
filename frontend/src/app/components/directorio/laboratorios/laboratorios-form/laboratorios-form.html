@@ -1,0 +1,79 @@
+<div class="content-area">
+  <div class="breadcrumb">
+    <span routerLink="/directorio/laboratorios" style="cursor:pointer;">LABORATORIOS</span> / 
+    <span class="current">{{ isEditMode ? 'EDITAR' : 'NUEVO' }}</span>
+  </div>
+
+  <div class="header-actions">
+    <h1>{{ isEditMode ? 'Editar Laboratorio' : 'Nuevo Laboratorio' }}</h1>
+    <button class="btn-secondary" routerLink="/directorio/laboratorios">Cancelar</button>
+  </div>
+
+  <div class="content-card form-card">
+    <form [formGroup]="labForm" (ngSubmit)="guardar()" class="clinical-form">
+      <div class="form-section">
+        <h3>Datos Principales</h3>
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="CodigoLaboratorio">Código Laboratorio *</label>
+            <input type="text" id="CodigoLaboratorio" formControlName="CodigoLaboratorio" class="form-control" [class.is-invalid]="labForm.get('CodigoLaboratorio')?.invalid && labForm.get('CodigoLaboratorio')?.touched">
+          </div>
+          <div class="form-group full-width">
+            <label for="NombreLaboratorio">Nombre Laboratorio *</label>
+            <input type="text" id="NombreLaboratorio" formControlName="NombreLaboratorio" class="form-control">
+          </div>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <h3>Contacto y Ubicación</h3>
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="Contacto">Persona de Contacto</label>
+            <input type="text" id="Contacto" formControlName="Contacto" class="form-control">
+          </div>
+          <div class="form-group">
+            <label for="CorreoElectronico">Correo Electrónico</label>
+            <input type="email" id="CorreoElectronico" formControlName="CorreoElectronico" class="form-control">
+          </div>
+          <div class="form-group">
+            <label for="TelefonoCelular">Teléfono Celular</label>
+            <input type="text" id="TelefonoCelular" formControlName="TelefonoCelular" class="form-control">
+          </div>
+          <div class="form-group">
+            <label for="TelefonoOficina1">Teléfono Oficina 1</label>
+            <input type="text" id="TelefonoOficina1" formControlName="TelefonoOficina1" class="form-control">
+          </div>
+          <div class="form-group">
+            <label for="TelefonoOficina2">Teléfono Oficina 2</label>
+            <input type="text" id="TelefonoOficina2" formControlName="TelefonoOficina2" class="form-control">
+          </div>
+          <div class="form-group">
+            <label for="Fax">Fax</label>
+            <input type="text" id="Fax" formControlName="Fax" class="form-control">
+          </div>
+          <div class="form-group full-width">
+            <label for="DireccionOficina">Dirección</label>
+            <textarea id="DireccionOficina" formControlName="DireccionOficina" class="form-control" rows="2"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <h3>Información Adicional</h3>
+        <div class="form-grid">
+          <div class="form-group full-width">
+            <label for="Observacion">Observaciones</label>
+            <textarea id="Observacion" formControlName="Observacion" class="form-control" rows="3"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn-primary" [disabled]="labForm.invalid || isSaving">
+          {{ isSaving ? 'Guardando...' : 'Guardar Laboratorio' }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
