@@ -215,7 +215,7 @@ def update_paciente(cedula: str, representado: str, paciente: schemas.PacienteCr
         "direccion_hab": paciente.DireccionHabitacion or '',
         "direccion_ofi": paciente.DireccionOficina or '',
         "telef_hab1": paciente.TelefHabita1 or '',
-        "telef_hab2": paciente.TelefHaBITa2 or '',
+        "telef_hab2": paciente.TelefHabita2 or '',
         "telef_ofi1": paciente.TelefOficina1 or '',
         "telef_ofi2": paciente.TelefOficina2 or '',
         "celular": paciente.TelefCelular or '',

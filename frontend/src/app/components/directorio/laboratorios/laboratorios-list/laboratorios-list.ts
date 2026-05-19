@@ -17,6 +17,10 @@ export class LaboratoriosList implements OnInit {
   isLoading = signal<boolean>(false);
   errorMessage = signal<string>('');
 
+  // Modal de confirmación
+  showModal = signal(false);
+  laboratorioToDelete = signal<Laboratorio | null>(null);
+
   ngOnInit() {
     this.cargarLaboratorios();
   }
@@ -36,12 +40,31 @@ export class LaboratoriosList implements OnInit {
   }
 
   eliminar(lab: Laboratorio) {
-    if (confirm(`¿Está seguro de eliminar el laboratorio ${lab.NombreLaboratorio}?`)) {
+    this.laboratorioToDelete.set(lab);
+    this.showModal.set(true);
+  }
+
+  confirmarEliminar() {
+    const lab = this.laboratorioToDelete();
+    if (lab) {
       this.directorioService.deleteLaboratorio(lab.CodigoLaboratorio).subscribe({
-        next: () => this.cargarLaboratorios(),
-        error: () => alert('Error eliminando laboratorio')
+        next: () => {
+          this.cargarLaboratorios();
+          this.showModal.set(false);
+          this.laboratorioToDelete.set(null);
+        },
+        error: () => {
+          this.showModal.set(false);
+          this.laboratorioToDelete.set(null);
+          alert('Error eliminando laboratorio');
+        }
       });
     }
+  }
+
+  cancelarEliminar() {
+    this.showModal.set(false);
+    this.laboratorioToDelete.set(null);
   }
 }
 

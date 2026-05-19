@@ -64,3 +64,16 @@
     </table>
   </div>
 </div>
+
+<!-- Modal de Confirmación de Eliminación -->
+<div class="modal-overlay" *ngIf="showModal()" (click)="cancelarEliminar()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <h3>Confirmar Eliminación</h3>
+    <p *ngIf="proveedorToDelete()">¿Está seguro de que desea eliminar al proveedor <strong>{{ proveedorToDelete()?.NombreProveedor }}</strong> (Código {{ proveedorToDelete()?.CodigoProveedor }})?</p>
+    <p>Esta acción no se puede deshacer.</p>
+    <div class="modal-actions">
+      <button class="btn-secondary" (click)="cancelarEliminar()">No</button>
+      <button class="btn-danger" (click)="confirmarEliminar()">Sí</button>
+    </div>
+  </div>
+</div>

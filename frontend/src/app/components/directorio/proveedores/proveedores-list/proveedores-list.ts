@@ -17,6 +17,10 @@ export class ProveedoresList implements OnInit {
   isLoading = signal<boolean>(false);
   errorMessage = signal<string>('');
 
+  // Modal de confirmación
+  showModal = signal(false);
+  proveedorToDelete = signal<Proveedor | null>(null);
+
   ngOnInit() {
     this.cargarProveedores();
   }
@@ -36,11 +40,30 @@ export class ProveedoresList implements OnInit {
   }
 
   eliminar(prov: Proveedor) {
-    if (confirm(`¿Está seguro de eliminar el proveedor ${prov.NombreProveedor}?`)) {
+    this.proveedorToDelete.set(prov);
+    this.showModal.set(true);
+  }
+
+  confirmarEliminar() {
+    const prov = this.proveedorToDelete();
+    if (prov) {
       this.directorioService.deleteProveedor(prov.CodigoProveedor).subscribe({
-        next: () => this.cargarProveedores(),
-        error: () => alert('Error eliminando proveedor')
+        next: () => {
+          this.cargarProveedores();
+          this.showModal.set(false);
+          this.proveedorToDelete.set(null);
+        },
+        error: () => {
+          this.showModal.set(false);
+          this.proveedorToDelete.set(null);
+          alert('Error eliminando proveedor');
+        }
       });
     }
+  }
+
+  cancelarEliminar() {
+    this.showModal.set(false);
+    this.proveedorToDelete.set(null);
   }
 }

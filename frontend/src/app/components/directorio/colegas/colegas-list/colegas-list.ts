@@ -17,6 +17,10 @@ export class ColegasList implements OnInit {
   isLoading = signal<boolean>(false);
   errorMessage = signal<string>('');
 
+  // Modal de confirmación
+  showModal = signal(false);
+  colegaToDelete = signal<Colega | null>(null);
+
   ngOnInit() {
     this.cargarColegas();
   }
@@ -36,12 +40,32 @@ export class ColegasList implements OnInit {
   }
 
   eliminar(colega: Colega) {
-    if (confirm(`¿Está seguro de eliminar a ${colega.NombreColega}?`)) {
+    this.colegaToDelete.set(colega);
+    this.showModal.set(true);
+  }
+
+  confirmarEliminar() {
+    const colega = this.colegaToDelete();
+    if (colega) {
       this.directorioService.deleteColega(colega.CodigoColega).subscribe({
-        next: () => this.cargarColegas(),
-        error: () => alert('Error eliminando colega')
+        next: () => {
+          this.cargarColegas();
+          this.showModal.set(false);
+          this.colegaToDelete.set(null);
+        },
+        error: () => {
+          this.showModal.set(false);
+          this.colegaToDelete.set(null);
+          // mantener comportamiento sencillo: mostrar alerta
+          alert('Error eliminando colega');
+        }
       });
     }
+  }
+
+  cancelarEliminar() {
+    this.showModal.set(false);
+    this.colegaToDelete.set(null);
   }
 }
 

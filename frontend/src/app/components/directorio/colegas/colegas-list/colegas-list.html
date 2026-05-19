@@ -47,7 +47,7 @@
           <td>
             <div class="user-cell">
               <div class="name">{{ c.NombreColega }}</div>
-              <div class="cedula">{{ c.Contacto || 'Sin contacto principal' }}</div>
+              <div class="cedula">{{ c.TelefonoOficina1 || 'Sin teléfono de oficina' }}</div>
             </div>
           </td>
           <td>{{ c.Especialidad || 'N/A' }}</td>
@@ -65,3 +65,16 @@
     </table>
   </div>
 </div>
+
+  <!-- Modal de Confirmación de Eliminación -->
+  <div class="modal-overlay" *ngIf="showModal()" (click)="cancelarEliminar()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <h3>Confirmar Eliminación</h3>
+      <p *ngIf="colegaToDelete()">¿Está seguro de que desea eliminar al colega <strong>{{ colegaToDelete()?.NombreColega }}</strong> (Código {{ colegaToDelete()?.CodigoColega }})?</p>
+      <p>Esta acción no se puede deshacer.</p>
+      <div class="modal-actions">
+        <button class="btn-secondary" (click)="cancelarEliminar()">No</button>
+        <button class="btn-danger" (click)="confirmarEliminar()">Sí</button>
+      </div>
+    </div>
+  </div>
