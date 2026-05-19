@@ -17,6 +17,8 @@ export interface Colega {
   TelefonoCelular?: string;
   Especialidad?: string;
   Observacion?: string;
+  Activo?: string | null;
+  activo?: string | null;
 }
 
 export interface Laboratorio {
@@ -31,6 +33,8 @@ export interface Laboratorio {
   TelefonoCelular?: string;
   Especialidad?: string;
   Observacion?: string;
+  Activo?: string | null;
+  activo?: string | null;
 }
 
 export interface Proveedor {
@@ -45,6 +49,8 @@ export interface Proveedor {
   TelefonoCelular?: string;
   Especialidad?: string;
   Observacion?: string;
+  Activo?: string | null;
+  activo?: string | null;
 }
 
 @Injectable({
@@ -69,6 +75,9 @@ export class DirectorioService {
   deleteColega(codigo: string): Observable<any> {
     return this.http.delete(`${this.apiUrl}/colegas/${codigo}`);
   }
+  reactivarColega(codigo: string): Observable<any> {
+    return this.http.put(`${this.apiUrl}/colegas/${codigo}/reactivar`, {});
+  }
 
   // Laboratorios
   getLaboratorios(): Observable<Laboratorio[]> {
@@ -83,6 +92,9 @@ export class DirectorioService {
   deleteLaboratorio(codigo: string): Observable<any> {
     return this.http.delete(`${this.apiUrl}/laboratorios/${codigo}`);
   }
+  reactivarLaboratorio(codigo: string): Observable<any> {
+    return this.http.put(`${this.apiUrl}/laboratorios/${codigo}/reactivar`, {});
+  }
 
   // Proveedores
   getProveedores(): Observable<Proveedor[]> {
@@ -96,6 +108,9 @@ export class DirectorioService {
   }
   deleteProveedor(codigo: string): Observable<any> {
     return this.http.delete(`${this.apiUrl}/proveedores/${codigo}`);
+  }
+  reactivarProveedor(codigo: string): Observable<any> {
+    return this.http.put(`${this.apiUrl}/proveedores/${codigo}/reactivar`, {});
   }
 }
 

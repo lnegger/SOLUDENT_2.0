@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from typing import Optional, Any
 
 class Token(BaseModel):
@@ -122,6 +122,7 @@ class DirectorioBase(BaseModel):
     TelefonoCelular: Optional[str] = None
     Especialidad: Optional[str] = None
     Observacion: Optional[str] = None
+    Activo: Optional[str] = None
 
 class ColegaBase(BaseModel):
     CodigoColega: str
@@ -137,14 +138,17 @@ class ColegaBase(BaseModel):
     TelefonoCelular: Optional[str] = None
     Especialidad: Optional[str] = None
     Observacion: Optional[str] = None
+    Activo: Optional[str] = None
 
 class ColegaCreate(ColegaBase):
     pass
 
 class ColegaResponse(ColegaBase):
+    Activo: Optional[str] = Field(None, alias='activo')
     CodCia: Optional[str] = None
 
     class Config:
+        allow_population_by_field_name = True
         from_attributes = True
 
 class LaboratorioBase(DirectorioBase):
@@ -155,9 +159,11 @@ class LaboratorioCreate(LaboratorioBase):
     pass
 
 class LaboratorioResponse(LaboratorioBase):
+    Activo: Optional[str] = Field(None, alias='activo')
     CodCia: Optional[str] = None
 
     class Config:
+        allow_population_by_field_name = True
         from_attributes = True
 
 class ProveedorBase(DirectorioBase):
@@ -168,7 +174,9 @@ class ProveedorCreate(ProveedorBase):
     pass
 
 class ProveedorResponse(ProveedorBase):
+    Activo: Optional[str] = Field(None, alias='activo')
     CodCia: Optional[str] = None
 
     class Config:
+        allow_population_by_field_name = True
         from_attributes = True

@@ -102,6 +102,16 @@ def update_colega(codigo: str, colega: schemas.ColegaCreate, db: Session = Depen
         db.rollback()
         raise HTTPException(status_code=500, detail=f"Error actualizando colega: {str(e)}")
 
+@router.put("/colegas/{codigo}/reactivar", response_model=dict)
+def reactivar_colega(codigo: str, db: Session = Depends(get_db)):
+    try:
+        db.execute(text("EXEC sp_edicion_colegas @Accion='ACT', @CodCia='01', @CodigoColega=:CodigoColega, @NombreColega='', @DireccionHabitacion='', @DireccionOficina='', @TelefonoHabitacion1='', @TelefonoHabitacion2='', @TelefonoOficina1='', @TelefonoOficina2='', @Fax='', @CorreoElectronico='', @TelefonoCelular='', @Especialidad='', @Observacion=''"), {"CodigoColega": codigo})
+        db.commit()
+        return {"message": "Colega reactivado exitosamente"}
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=500, detail=f"Error reactivando colega: {str(e)}")
+
 @router.delete("/colegas/{codigo}", response_model=dict)
 def delete_colega(codigo: str, db: Session = Depends(get_db)):
     try:
@@ -196,6 +206,16 @@ def update_laboratorio(codigo: str, lab: schemas.LaboratorioCreate, db: Session 
         db.rollback()
         raise HTTPException(status_code=500, detail=f"Error actualizando laboratorio: {str(e)}")
 
+@router.put("/laboratorios/{codigo}/reactivar", response_model=dict)
+def reactivar_laboratorio(codigo: str, db: Session = Depends(get_db)):
+    try:
+        db.execute(text("EXEC sp_edicion_Laboratorios @Accion='ACT', @CodCia='01', @CodigoLaboratorio=:CodigoLaboratorio, @NombreLaboratorio='', @Contacto='', @DireccionOficina='', @TelefonoOficina1='', @TelefonoOficina2='', @Fax='', @CorreoElectronico='', @TelefonoCelular='', @Especialidad='', @Observacion=''"), {"CodigoLaboratorio": codigo})
+        db.commit()
+        return {"message": "Laboratorio reactivado exitosamente"}
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=500, detail=f"Error reactivando laboratorio: {str(e)}")
+
 @router.delete("/laboratorios/{codigo}", response_model=dict)
 def delete_laboratorio(codigo: str, db: Session = Depends(get_db)):
     try:
@@ -289,6 +309,16 @@ def update_proveedor(codigo: str, prov: schemas.ProveedorCreate, db: Session = D
     except Exception as e:
         db.rollback()
         raise HTTPException(status_code=500, detail=f"Error actualizando proveedor: {str(e)}")
+
+@router.put("/proveedores/{codigo}/reactivar", response_model=dict)
+def reactivar_proveedor(codigo: str, db: Session = Depends(get_db)):
+    try:
+        db.execute(text("EXEC sp_edicion_proveedores @Accion='ACT', @CodCia='01', @CodigoProveedor=:CodigoProveedor, @NombreProveedor='', @Contacto='', @DireccionOficina='', @TelefonoOficina1='', @TelefonoOficina2='', @Fax='', @CorreoElectronico='', @TelefonoCelular='', @Especialidad='', @Observacion=''"), {"CodigoProveedor": codigo})
+        db.commit()
+        return {"message": "Proveedor reactivado exitosamente"}
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=500, detail=f"Error reactivando proveedor: {str(e)}")
 
 @router.delete("/proveedores/{codigo}", response_model=dict)
 def delete_proveedor(codigo: str, db: Session = Depends(get_db)):

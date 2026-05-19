@@ -9,6 +9,15 @@
   </div>
 </header>
 
+<div class="success-toast" *ngIf="showSuccessToast()" (click)="dismissSuccessToast()">
+  <div class="toast-icon">✅</div>
+  <div class="toast-body">
+    <div class="toast-title">Colega Reactivado</div>
+    <div class="toast-message">{{ successMessage() }}</div>
+  </div>
+  <button class="toast-close" (click)="dismissSuccessToast()">✕</button>
+</div>
+
 <div class="content-area">
   <div class="breadcrumb">
     <span>DIRECTORIO</span> / <span class="current">COLEGAS</span>
@@ -37,12 +46,13 @@
           <th>Nombre</th>
           <th>Especialidad</th>
           <th>Teléfono Celular</th>
+          <th>Estado</th>
           <th>Correo</th>
           <th class="actions-col">Acciones</th>
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let c of colegas()">
+        <tr *ngFor="let c of colegas()" [class.inactive-row]="!isActivo(c)">
           <td>{{ c.CodigoColega }}</td>
           <td>
             <div class="user-cell">
@@ -52,14 +62,25 @@
           </td>
           <td>{{ c.Especialidad || 'N/A' }}</td>
           <td>{{ c.TelefonoCelular || 'N/A' }}</td>
+          <td>
+            <span class="status-badge" [ngClass]="isActivo(c) ? 'active' : 'inactive'">
+              {{ isActivo(c) ? 'Activo' : 'Inactivo' }}
+            </span>
+          </td>
           <td>{{ c.CorreoElectronico || 'N/A' }}</td>
           <td class="actions-cell">
-            <button class="icon-btn edit-btn" [routerLink]="['/directorio/colegas/editar', c.CodigoColega]" title="Editar">✏️</button>
-            <button class="icon-btn delete-btn" (click)="eliminar(c)" title="Eliminar">🗑️</button>
+            <ng-container *ngIf="isActivo(c)">
+              <button class="icon-btn edit-btn" [routerLink]="['/directorio/colegas/editar', c.CodigoColega]" title="Editar">✏️</button>
+              <button class="icon-btn delete-btn" (click)="eliminar(c)" title="Eliminar">🗑️</button>
+            </ng-container>
+            <ng-container *ngIf="!isActivo(c)">
+              <button class="icon-btn view-btn" [routerLink]="['/directorio/colegas/editar', c.CodigoColega]" title="Ver detalles">👁️</button>
+              <button class="icon-btn activate-btn" (click)="activarColega(c)" title="Reactivar colega">✅</button>
+            </ng-container>
           </td>
         </tr>
         <tr *ngIf="colegas().length === 0">
-          <td colspan="6" class="empty-state">No se encontraron colegas registrados.</td>
+          <td colspan="7" class="empty-state">No se encontraron colegas registrados.</td>
         </tr>
       </tbody>
     </table>
@@ -75,6 +96,31 @@
       <div class="modal-actions">
         <button class="btn-secondary" (click)="cancelarEliminar()">No</button>
         <button class="btn-danger" (click)="confirmarEliminar()">Sí</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de Confirmación de Reactivación -->
+  <div class="modal-overlay" *ngIf="showActivateModal()" (click)="cancelarActivar()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <h3>Reactivar Colega</h3>
+      <p *ngIf="colegaToActivate()">¿Desea reactivar al colega <strong>{{ colegaToActivate()?.NombreColega }}</strong> (Código {{ colegaToActivate()?.CodigoColega }})?</p>
+      <p>El colega volverá a estar disponible en el directorio.</p>
+      <div class="modal-actions">
+        <button class="btn-secondary" (click)="cancelarActivar()">Cancelar</button>
+        <button class="btn-activate" (click)="confirmarActivar()">Reactivar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de Error -->
+  <div class="modal-overlay" *ngIf="showErrorModal()" (click)="dismissErrorModal()">
+    <div class="modal-content error-modal" (click)="$event.stopPropagation()">
+      <div class="error-icon">⚠️</div>
+      <h3>Error al Reactivar</h3>
+      <p>{{ errorModalMessage() }}</p>
+      <div class="modal-actions">
+        <button class="btn-primary" (click)="dismissErrorModal()">Entendido</button>
       </div>
     </div>
   </div>

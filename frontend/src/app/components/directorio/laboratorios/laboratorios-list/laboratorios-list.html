@@ -9,6 +9,15 @@
   </div>
 </header>
 
+<div class="success-toast" *ngIf="showSuccessToast()" (click)="dismissSuccessToast()">
+  <div class="toast-icon">✅</div>
+  <div class="toast-body">
+    <div class="toast-title">Laboratorio Reactivado</div>
+    <div class="toast-message">{{ successMessage() }}</div>
+  </div>
+  <button class="toast-close" (click)="dismissSuccessToast()">✕</button>
+</div>
+
 <div class="content-area">
   <div class="breadcrumb">
     <span>DIRECTORIO</span> / <span class="current">LABORATORIOS</span>
@@ -37,12 +46,13 @@
           <th>Descripción</th>
           <th>Contacto</th>
           <th>Teléfono Celular</th>
+          <th>Estado</th>
           <th>Correo</th>
           <th class="actions-col">Acciones</th>
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let l of laboratorios()">
+        <tr *ngFor="let l of laboratorios()" [class.inactive-row]="!isActivo(l)">
           <td>{{ l.CodigoLaboratorio }}</td>
           <td>
             <div class="user-cell">
@@ -51,14 +61,25 @@
           </td>
           <td>{{ l.Contacto || 'N/A' }}</td>
           <td>{{ l.TelefonoCelular || 'N/A' }}</td>
+          <td>
+            <span class="status-badge" [ngClass]="isActivo(l) ? 'active' : 'inactive'">
+              {{ isActivo(l) ? 'Activo' : 'Inactivo' }}
+            </span>
+          </td>
           <td>{{ l.CorreoElectronico || 'N/A' }}</td>
           <td class="actions-cell">
-            <button class="icon-btn edit-btn" [routerLink]="['/directorio/laboratorios/editar', l.CodigoLaboratorio]" title="Editar">✏️</button>
-            <button class="icon-btn delete-btn" (click)="eliminar(l)" title="Eliminar">🗑️</button>
+            <ng-container *ngIf="isActivo(l)">
+              <button class="icon-btn edit-btn" [routerLink]="['/directorio/laboratorios/editar', l.CodigoLaboratorio]" title="Editar">✏️</button>
+              <button class="icon-btn delete-btn" (click)="eliminar(l)" title="Eliminar">🗑️</button>
+            </ng-container>
+            <ng-container *ngIf="!isActivo(l)">
+              <button class="icon-btn view-btn" [routerLink]="['/directorio/laboratorios/editar', l.CodigoLaboratorio]" title="Ver detalles">👁️</button>
+              <button class="icon-btn activate-btn" (click)="activarLaboratorio(l)" title="Reactivar laboratorio">✅</button>
+            </ng-container>
           </td>
         </tr>
         <tr *ngIf="laboratorios().length === 0">
-          <td colspan="6" class="empty-state">No se encontraron laboratorios registrados.</td>
+          <td colspan="7" class="empty-state">No se encontraron laboratorios registrados.</td>
         </tr>
       </tbody>
     </table>
@@ -74,6 +95,31 @@
     <div class="modal-actions">
       <button class="btn-secondary" (click)="cancelarEliminar()">No</button>
       <button class="btn-danger" (click)="confirmarEliminar()">Sí</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de Confirmación de Reactivación -->
+<div class="modal-overlay" *ngIf="showActivateModal()" (click)="cancelarActivar()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <h3>Reactivar Laboratorio</h3>
+    <p *ngIf="laboratorioToActivate()">¿Desea reactivar al laboratorio <strong>{{ laboratorioToActivate()?.NombreLaboratorio }}</strong> (Código {{ laboratorioToActivate()?.CodigoLaboratorio }})?</p>
+    <p>El laboratorio volverá a estar disponible en el directorio.</p>
+    <div class="modal-actions">
+      <button class="btn-secondary" (click)="cancelarActivar()">Cancelar</button>
+      <button class="btn-activate" (click)="confirmarActivar()">Reactivar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de Error -->
+<div class="modal-overlay" *ngIf="showErrorModal()" (click)="dismissErrorModal()">
+  <div class="modal-content error-modal" (click)="$event.stopPropagation()">
+    <div class="error-icon">⚠️</div>
+    <h3>Error al Reactivar</h3>
+    <p>{{ errorModalMessage() }}</p>
+    <div class="modal-actions">
+      <button class="btn-primary" (click)="dismissErrorModal()">Entendido</button>
     </div>
   </div>
 </div>

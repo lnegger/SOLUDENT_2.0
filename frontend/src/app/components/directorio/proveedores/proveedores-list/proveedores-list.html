@@ -38,6 +38,7 @@
           <th>Contacto</th>
           <th>Teléfono Celular</th>
           <th>Correo</th>
+          <th>Estado</th>
           <th class="actions-col">Acciones</th>
         </tr>
       </thead>
@@ -52,13 +53,24 @@
           <td>{{ p.Contacto || 'N/A' }}</td>
           <td>{{ p.TelefonoCelular || 'N/A' }}</td>
           <td>{{ p.CorreoElectronico || 'N/A' }}</td>
+          <td>
+            <span class="status-badge" [class.active]="isActivo(p)">
+              {{ isActivo(p) ? 'Activo' : 'Inactivo' }}
+            </span>
+          </td>
           <td class="actions-cell">
-            <button class="icon-btn edit-btn" [routerLink]="['/directorio/proveedores/editar', p.CodigoProveedor]" title="Editar">✏️</button>
-            <button class="icon-btn delete-btn" (click)="eliminar(p)" title="Eliminar">🗑️</button>
+            <ng-container *ngIf="isActivo(p)">
+              <button class="icon-btn edit-btn" [routerLink]="['/directorio/proveedores/editar', p.CodigoProveedor]" title="Editar">✏️</button>
+              <button class="icon-btn delete-btn" (click)="eliminar(p)" title="Eliminar">🗑️</button>
+            </ng-container>
+            <ng-container *ngIf="!isActivo(p)">
+              <button class="icon-btn view-btn" [routerLink]="['/directorio/proveedores/editar', p.CodigoProveedor]" title="Ver proveedor">👁️</button>
+              <button class="icon-btn activate-btn" (click)="activarProveedor(p)" title="Reactivar proveedor">✅</button>
+            </ng-container>
           </td>
         </tr>
         <tr *ngIf="proveedores().length === 0">
-          <td colspan="6" class="empty-state">No se encontraron proveedores registrados.</td>
+          <td colspan="7" class="empty-state">No se encontraron proveedores registrados.</td>
         </tr>
       </tbody>
     </table>
@@ -77,3 +89,34 @@
     </div>
   </div>
 </div>
+  <div class="modal-overlay" *ngIf="showActivateModal()" (click)="cancelarActivar()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <h3>Reactivar Proveedor</h3>
+      <p *ngIf="proveedorToActivate()">¿Desea reactivar al proveedor <strong>{{ proveedorToActivate()?.NombreProveedor }}</strong> (Código {{ proveedorToActivate()?.CodigoProveedor }})?</p>
+      <p>El proveedor volverá a estar disponible en el directorio.</p>
+      <div class="modal-actions">
+        <button class="btn-secondary" (click)="cancelarActivar()">Cancelar</button>
+        <button class="btn-activate" (click)="confirmarActivar()">Reactivar</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="success-toast" *ngIf="showSuccessToast()" (click)="dismissSuccessToast()">
+    <div class="toast-icon">✅</div>
+    <div class="toast-body">
+      <div class="toast-title">Proveedor Reactivado</div>
+      <div class="toast-message">{{ successMessage() }}</div>
+    </div>
+    <button class="toast-close" (click)="dismissSuccessToast()">✕</button>
+  </div>
+
+  <div class="modal-overlay" *ngIf="showErrorModal()" (click)="dismissErrorModal()">
+    <div class="modal-content error-modal" (click)="$event.stopPropagation()">
+      <div class="error-icon">⚠️</div>
+      <h3>Error al Reactivar</h3>
+      <p>{{ errorModalMessage() }}</p>
+      <div class="modal-actions">
+        <button class="btn-primary" (click)="dismissErrorModal()">Entendido</button>
+      </div>
+    </div>
+  </div>
